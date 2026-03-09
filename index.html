@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>たあたるの活動記録 | Cyber Portfolio</title>
+    <style>
+        /* ==============================
+           ベース設計とサイバー調カラーテーマ
+           ============================== */
+        :root {
+            --bg-color: #030812;
+            --text-main: #d4e8ff;
+            --text-sub: #7a9ac2;
+            --accent-glow: #00f0ff;
+            --accent-secondary: #ff0055;
+            --accent-gold: #ffbe00;
+            /* TRH用のゴールド調 */
+            --card-bg: rgba(7, 18, 40, 0.6);
+            --border-glow: 0 0 10px rgba(0, 240, 255, 0.4), inset 0 0 10px rgba(0, 240, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Roboto', 'Verdana', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* 宇宙・サイバー空間風の背景グリッド */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image:
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* ==============================
+           ヘッダー・ナビゲーション
+           ============================== */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(3, 8, 18, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 240, 255, 0.1);
+            z-index: 1000;
+            padding: 20px 0;
+        }
+
+        /* SPA画面切り替え用メインメニュー */
+        .spa-nav {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .spa-nav li {
+            position: relative;
+        }
+
+        .btn-tab {
+            background: transparent;
+            color: var(--text-sub);
+            border: 1px solid transparent;
+            padding: 8px 25px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-tab:hover,
+        .btn-tab.active {
+            color: var(--accent-glow);
+            border: 1px solid var(--accent-glow);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2), inset 0 0 10px rgba(0, 240, 255, 0.1);
+            text-shadow: 0 0 5px var(--accent-glow);
+        }
+
+        /* ページ内でのスクロールメニュー (Mainページのみ表示用) */
+        .page-internal-nav {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 20px;
+            margin-top: 15px;
+            font-size: 0.85rem;
+        }
+
+        .page-internal-nav a {
+            color: var(--text-sub);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        .page-internal-nav a:hover {
+            color: var(--accent-glow);
+            text-shadow: 0 0 5px var(--accent-glow);
+        }
+
+        /* ==============================
+           SPA表示切り替え関連 
+           ============================== */
+        .spa-page {
+            display: none;
+            opacity: 0;
+            padding-top: 120px;
+            /* ヘッダーの余白 */
+            transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(20px);
+        }
+
+        .spa-page.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ==============================
+           共通セクションレイアウト
+           ============================== */
+        section {
+            min-height: 80vh;
+            padding: 60px 20px 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        h2 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            text-shadow: 0 0 15px var(--accent-glow);
+            border-bottom: 2px solid rgba(0, 240, 255, 0.3);
+            padding-bottom: 10px;
+            display: inline-block;
+            width: 100%;
+        }
+
+        p {
+            font-size: 1.15rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .highlight-blue {
+            color: var(--accent-glow);
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+        }
+
+        .highlight-pink {
+            color: var(--accent-secondary);
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(255, 0, 85, 0.5);
+        }
+
+        .highlight-gold {
+            color: var(--accent-gold);
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(255, 190, 0, 0.6);
+        }
+
+        /* ==============================
+           カードコンポーネント (画像+テキスト用)
+           ============================== */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 12px;
+            padding: 40px;
+            margin-top: 40px;
+            box-shadow: var(--border-glow);
+            backdrop-filter: blur(8px);
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .card.reverse {
+            flex-direction: row-reverse;
+        }
+
+        .card img {
+            width: 450px;
+            height: 300px;
+            border-radius: 8px;
+            border: 1px solid var(--accent-glow);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover img {
+            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
+        }
+
+        .card-content {
+            flex: 1;
+        }
+
+        /* メンバーメッセージ風の通知ボックス */
+        .member-msg {
+            background: rgba(0, 240, 255, 0.05);
+            border-left: 4px solid var(--accent-glow);
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+            color: #fff;
+        }
+
+        /* ==============================
+           新ページ用：メンバーグリッド
+           ============================== */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .member-box {
+            background: rgba(3, 8, 18, 0.7);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .member-box:hover {
+            border-color: var(--accent-glow);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+            transform: translateY(-5px);
+        }
+
+        /* TRH用メンバーボックス */
+        .member-box.gold-theme {
+            border-color: rgba(255, 190, 0, 0.4);
+        }
+
+        .member-box.gold-theme:hover {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 20px rgba(255, 190, 0, 0.3);
+        }
+
+        .role-tag {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: rgba(0, 240, 255, 0.2);
+            color: var(--accent-glow);
+            padding: 3px 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-bottom-right-radius: 8px;
+            border-right: 1px solid var(--accent-glow);
+            border-bottom: 1px solid var(--accent-glow);
+        }
+
+        .member-box.gold-theme .role-tag {
+            background: rgba(255, 190, 0, 0.2);
+            color: var(--accent-gold);
+            border-color: var(--accent-gold);
+        }
+
+        .member-name {
+            font-size: 1.6rem;
+            color: #fff;
+            margin: 15px 0;
+            font-weight: 800;
+        }
+
+        .member-desc {
+            font-size: 1.05rem;
+            color: var(--text-sub);
+        }
+
+        .badge-char {
+            display: inline-block;
+            background: rgba(255, 0, 85, 0.15);
+            color: var(--accent-secondary);
+            border: 1px solid var(--accent-secondary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin: 5px;
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.2);
+        }
+
+        /* 社員募集バナー */
+        .hiring-banner {
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.15), transparent);
+            border-top: 2px solid var(--accent-glow);
+            border-bottom: 2px solid var(--accent-glow);
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            margin: 50px 0;
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 5px;
+            text-shadow: 0 0 15px var(--accent-glow);
+            animation: pulse-border 2.5s infinite;
+        }
+
+        @keyframes pulse-border {
+            0% {
+                box-shadow: 0 0 5px rgba(0, 240, 255, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+            }
+
+            100% {
+                box-shadow: 0 0 5px rgba(0, 240, 255, 0.2);
+            }
+        }
+
+        /* ==============================
+           YouTube セクション
+           ============================== */
+        .video-wrapper {
+            background: #000;
+            border: 1px solid var(--accent-secondary);
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.3);
+            width: 100%;
+            max-width: 800px;
+            aspect-ratio: 16/9;
+            margin: 40px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-wrapper::before {
+            content: '▶ 動画埋め込み領域（準備中…）';
+            position: absolute;
+            z-index: 2;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+        }
+
+        .video-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 0, 85, 0.1) 2px,
+                    rgba(255, 0, 85, 0.1) 4px);
+            z-index: 1;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 50px;
+            background: transparent;
+            color: var(--accent-secondary);
+            border: 2px solid var(--accent-secondary);
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 0 10px rgba(255, 0, 85, 0.2), 0 0 10px rgba(255, 0, 85, 0.2);
+        }
+
+        .btn:hover {
+            background: var(--accent-secondary);
+            color: #fff;
+            box-shadow: 0 0 25px var(--accent-secondary);
+            transform: translateY(-3px);
+        }
+
+        /* ==============================
+           アニメーションクラス
+           ============================== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ==============================
+           スマートフォン用レスポンシブ
+           ============================== */
+        @media (max-width: 860px) {
+
+            .card,
+            .card.reverse {
+                flex-direction: column;
+                padding: 25px;
+            }
+
+            .card img {
+                width: 100%;
+                height: auto;
+            }
+
+            h2 {
+                font-size: 2.2rem;
+            }
+
+            .spa-nav {
+                gap: 10px;
+            }
+
+            .btn-tab {
+                padding: 6px 15px;
+                font-size: 0.85rem;
+            }
+
+            section {
+                padding: 40px 20px 60px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 背景装飾 -->
+    <div class="bg-grid"></div>
+
+    <!-- ヘッダー / SPA切り替えメニュー -->
+    <header>
+        <ul class="spa-nav">
+            <li><button class="btn-tab active" data-target="page-main">メインページ</button></li>
+            <li><button class="btn-tab" data-target="page-company">たあたる会社</button></li>
+            <li><button class="btn-tab" data-target="page-trh">TRH (ブロスタ)</button></li>
+        </ul>
+
+        <!-- Mainページ選択時のみひっそり表示するページ内リンク -->
+        <ul class="page-internal-nav" id="internalNav">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#unity">Unity</a></li>
+            <li><a href="#blender">Blender</a></li>
+            <li><a href="#youtube">YouTube</a></li>
+        </ul>
+    </header>
+
+    <!-- ==============================================
+         SPA 画面①：メインページ (既存のコンテンツ)
+         ============================================== -->
+    <main id="page-main" class="spa-page active">
+        <!-- 1. Homeセクション -->
+        <section id="home">
+            <div class="container fade-in">
+                <h2>たあたるの活動記録</h2>
+                <div class="card">
+                    <img src="images/cyber_profile.png" alt="Taataru Profile Avatar">
+                    <div class="card-content">
+                        <p>僕は現役高校生のクリエイター。<span class="highlight-blue">最新のAI技術</span>を限界まで駆使して、バシバシといろんない新しい領域に挑戦しています。
+                        </p>
+                        <p>プログラミング、3Dモデリング、ゲーム開発……思いついたアイデアはすべて形にしていくスタイル。</p>
+                        <div class="member-msg">
+                            「みんないつもの最高のメンバーだ！いつも一緒にいてくれてサンキュー。これからもよろしく！！」
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Unityセクション -->
+        <section id="unity">
+            <div class="container fade-in">
+                <h2>Unity × AI Game Dev</h2>
+                <p style="text-align:center;">現在、3DのファンタジーRPG（TPS要素あり）を鋭意制作中。<br>人間×AIで実現する、新しいゲーム開発の形。</p>
+                <div class="card reverse">
+                    <img src="images/ユニティ.png" alt="AI Game Development UI">
+                    <div class="card-content">
+                        <p>このプロジェクトは、魔法のような2つの最新ツールを導入し、<span class="highlight-blue">爆速で開発</span>を進めています。</p>
+                        <ul>
+                            <li style="margin-bottom: 15px;">
+                                <strong class="highlight-blue">Tripo Studio</strong><br>
+                                テキストや画像から数十秒で高品質な3Dモデルを自動生成できる魔法のようなAI。これでゲーム内のアセットを量産中！
+                            </li>
+                            <li>
+                                <strong class="highlight-blue">Antigravity</strong><br>
+                                Googleが開発した次世代のAI特化型エディタ(IDE)。AIエージェントがUnityのコードを自動で書いてくれる、まさに最強の相棒。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Blenderセクション -->
+        <section id="blender">
+            <div class="container fade-in">
+                <h2>Blender - 秋津駅</h2>
+                <div class="card">
+                    <img src="images/ブレンダー.png" alt="Blender Akitsu Station Modeling">
+                    <div class="card-content">
+                        <p>AIをフル活用しているUnity開発とは対照的に、Blenderでは<span class="highlight-pink">AIを一切使わない真剣勝負</span>。</p>
+                        <p>現在、「秋津駅」の3Dモデリングに挑戦中。初心者ながら、自力と気合でコツコツとポリゴンを張り続ける日々です。</p>
+                        <p>効率化の魔法はないけれど、一つひとつのパーツに手作業で魂を込めていく泥臭い努力も、悪くない。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. YouTubeセクション -->
+        <section id="youtube">
+            <div class="container fade-in">
+                <h2>YouTube Channel</h2>
+                <div style="text-align:center; max-width:800px; margin: 0 auto;">
+                    <p>ゲーム実況など、様々な動画をアップしています！</p>
+                    <p>……と言いたいところですが、<span class="highlight-pink">実は最近ちょっとサボり気味（笑）</span>。</p>
+                    <p>ゲーム開発に夢中になりすぎた結果なので、ユーモアとともに言い訳させてください。そのうち超大作（？）が上がるかもしれないので、気長にお待ちください！</p>
+                </div>
+
+                <div class="video-wrapper"></div>
+
+                <div class="btn-container">
+                    <a href="https://www.youtube.com/@taataru-kami" target="_blank" class="btn">チャンネルへ行く</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==============================================
+         SPA 画面②：たあたる会社
+         ============================================== -->
+    <main id="page-company" class="spa-page">
+        <section>
+            <div class="container">
+                <h2>たあたる会社 (Taataru Company)</h2>
+
+                <div style="text-align:center; max-width:800px; margin: 0 auto;">
+                    <p>我々「たあたる会社」は、<span class="highlight-blue">東亜学園周辺をBlenderで3Dモデリングして完全再現する</span>という壮大なプロジェクトを進行中です。
+                    </p>
+                    <p>一人一人が個性を放ち、熱意をもってクリエイティブな活動に取り組んでいます。</p>
+                </div>
+
+                <!-- メンバー募集バナー -->
+                <div class="hiring-banner">
+                    現在、社員募集中！
+                </div>
+
+                <!-- 社員紹介グリッド -->
+                <div class="grid-container">
+                    <div class="member-box">
+                        <div class="role-tag">部長</div>
+                        <div class="member-name">大島</div>
+                        <div class="member-desc">
+                            <span class="highlight-blue">安定型</span>。<br>冷静沈着にプロジェクトを進める、チームの不動の柱。
+                        </div>
+                    </div>
+
+                    <div class="member-box">
+                        <div class="role-tag">社員</div>
+                        <div class="member-name">いもん</div>
+                        <div class="member-desc">
+                            <span class="highlight-blue">職人気質</span>。<br>とにかく丁寧に、妥協を許さず作り込むプロフェッショナル。
+                        </div>
+                    </div>
+
+                    <div class="member-box">
+                        <div class="role-tag">社員</div>
+                        <div class="member-name">吉田</div>
+                        <div class="member-desc">
+                            <span class="highlight-blue">Unity使い</span>。<br>頼れるエンジニアとしてシステムの根幹を支える。
+                        </div>
+                    </div>
+
+                    <div class="member-box" style="border-style: dashed;">
+                        <div class="role-tag"
+                            style="background: rgba(255,255,255,0.1); border-color: #aaa; color: #ccc;">研修中</div>
+                        <div class="member-name">首藤</div>
+                        <div class="member-desc" style="color: #aaa;">
+                            現在バリバリ修行中。<br>確かな成長を見せる期待のルーキー。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==============================================
+         SPA 画面③：ブロスタチーム TRH
+         ============================================== -->
+    <main id="page-trh" class="spa-page">
+        <section>
+            <div class="container">
+                <h2 style="text-shadow: 0 0 15px var(--accent-gold); border-bottom-color: rgba(255, 190, 0, 0.3);">Brawl
+                    Stars Team - TRH (たあたるはんず)</h2>
+
+                <div style="text-align:center; max-width:800px; margin: 0 auto 30px;">
+                    <p style="font-size: 1.3rem;">最強を目指すブロスタ（Brawl Stars）のチーム。<br>
+                        <span class="highlight-gold" style="font-size: 1.8rem;">戦績はかなり良い！</span><br>
+                        ……という自信満々の姿勢で、数多の戦場を駆け抜けています。
+                    </p>
+                </div>
+
+                <!-- チームメンバーグリッド -->
+                <div class="grid-container">
+                    <div class="member-box gold-theme">
+                        <div class="role-tag">リーダー</div>
+                        <div class="member-name" style="color: var(--accent-gold);">たあたる</div>
+                        <div class="member-desc">
+                            前線を張ってチームを牽引する絶対的エース。
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <span style="font-size: 0.85rem; color: var(--text-sub);">【持ちキャラ】</span><br>
+                            <span class="badge-char">ラリロリ</span>
+                            <span class="badge-char">ケンジ</span>
+                        </div>
+                    </div>
+
+                    <div class="member-box gold-theme">
+                        <div class="role-tag">メンバー</div>
+                        <div class="member-name">黄金のマシュマロ</div>
+                        <div class="member-desc">
+                            堅実な立ち回りで確実なサポート＆キルを取る。
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <span style="font-size: 0.85rem; color: var(--text-sub);">【持ちキャラ】</span><br>
+                            <span class="badge-char">コレット</span>
+                        </div>
+                    </div>
+
+                    <div class="member-box gold-theme">
+                        <div class="role-tag">メンバー</div>
+                        <div class="member-name">はる</div>
+                        <div class="member-desc">
+                            トリッキーなキャラを使いこなす曲者プレイヤー。
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <span style="font-size: 0.85rem; color: var(--text-sub);">【持ちキャラ】</span><br>
+                            <span class="badge-char">ラフス</span>
+                            <span class="badge-char">モーティス</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- JavaScript（SPA切り替え＆スクロールアニメーションなど） -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            /* 1. スクロール時のフワッと浮かび上がるアニメーション */
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            // アニメーション初期化関数（画面切り替え時に再発火させるため）
+            const initAnimations = () => {
+                const fadeElements = document.querySelectorAll('.fade-in');
+                fadeElements.forEach(el => {
+                    el.classList.remove('visible'); // 一旦リセット
+                    observer.observe(el);
+                });
+            };
+
+            initAnimations(); // 初回ロード時
+
+            /* 2. SPA タブ（画面）切り替えロジック */
+            const tabButtons = document.querySelectorAll('.btn-tab');
+            const spaPages = document.querySelectorAll('.spa-page');
+            const internalNav = document.getElementById('internalNav');
+
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // ① ボタンのアクティブ状態を切り替え
+                    tabButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    // ② 表示するターゲットページIDを取得
+                    const targetId = btn.getAttribute('data-target');
+
+                    // ③ 全ページの非表示化、および対象ページの表示化
+                    spaPages.forEach(page => {
+                        if (page.id === targetId) {
+                            page.classList.add('active');
+                        } else {
+                            page.classList.remove('active');
+                        }
+                    });
+
+                    // メインページ以外では内部リンクタグ(Home, Unity等)を隠す
+                    if (targetId === 'page-main') {
+                        internalNav.style.display = 'flex';
+                    } else {
+                        internalNav.style.display = 'none';
+                    }
+
+                    // ④ ページのいちばん上まで戻す ＆ 再アニメーション
+                    window.scrollTo({ top: 0, behavior: 'instant' });
+                    initAnimations();
+                });
+            });
+
+            /* 3. ナビゲーション内部リンクのスムーズスクロール (Main専用) */
+            const navLinks = document.querySelectorAll('.page-internal-nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 120, // 固定ヘッダーの高さ分＋α引く
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
