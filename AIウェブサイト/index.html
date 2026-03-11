@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI活用ガイド | 新入生のための3大AI完全ガイド</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;700;800&family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+</head>
+<body>
+
+    <!-- Section 1: Hero -->
+    <section id="hero" class="hero-section">
+        <div id="particles-js"></div>
+        <div class="hero-content">
+            <h1 class="glitch-text" data-text="大学生活をハックせよ！">大学生活をハックせよ！</h1>
+            <h2 class="neon-text">新入生のための3大AI完全ガイド</h2>
+            <p class="subtitle">新たな世界をサバイブするための初期装備を手に入れろ</p>
+        </div>
+        <div class="scroll-indicator">
+            <span class="arrow-down"></span>
+        </div>
+    </section>
+
+    <main class="container">
+        <!-- Section 2: Initial Equipment (Comparison Matrix) -->
+        <section id="equipment" class="section">
+            <h2 class="section-title"><span class="icon">🗡️</span> 初期装備の選択 (3大フロンティアモデル)</h2>
+            <div class="card-grid">
+                <!-- ChatGPT -->
+                <div class="tilt-card model-card chatgpt" data-tilt data-tilt-glare data-tilt-max-glare="0.5" onclick="openModal('modal-chatgpt')">
+                    <div class="card-header">
+                        <h3>ChatGPT</h3>
+                        <span class="role">万能の主人公</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="description">「すべてをそつなくこなす万能型アシスタント」<br><span class="click-hint">タップして詳細を見る</span></p>
+                        <ul class="stats-list">
+                            <li><span class="stat-name">テキスト推論</span> <span class="stat-value">◎</span></li>
+                            <li><span class="stat-name">コーディング</span> <span class="stat-value">◯</span></li>
+                            <li><span class="stat-name">画像・動画生成</span> <span class="stat-value">◯</span></li>
+                            <li><span class="stat-name">汎用性</span> <span class="stat-value">◎</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Claude -->
+                <div class="tilt-card model-card claude" data-tilt data-tilt-glare data-tilt-max-glare="0.5" onclick="openModal('modal-claude')">
+                    <div class="card-header">
+                        <h3>Claude</h3>
+                        <span class="role">論理の賢者</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="description">「レポートとプログラミングの神」<br><span class="click-hint">タップして詳細を見る</span></p>
+                        <ul class="stats-list">
+                            <li><span class="stat-name">テキスト推論</span> <span class="stat-value highlight-text">◎ 最高水準</span></li>
+                            <li><span class="stat-name">コーディング</span> <span class="stat-value highlight-text">◎ ライブコーディングで頭一つ抜ける</span></li>
+                            <li><span class="stat-name">画像・動画生成</span> <span class="stat-value error-text">❌</span></li>
+                            <li><span class="stat-name">汎用性</span> <span class="stat-value">◯</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Gemini -->
+                <div class="tilt-card model-card gemini" data-tilt data-tilt-glare data-tilt-max-glare="0.5" onclick="openModal('modal-gemini')">
+                    <div class="card-header">
+                        <h3>Gemini</h3>
+                        <span class="role">情報統合の錬金術師</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="description">「プレゼン資料と長文PDFまとめの相棒」<br><span class="click-hint">タップして詳細を見る</span></p>
+                        <ul class="stats-list">
+                            <li><span class="stat-name">テキスト推論</span> <span class="stat-value">◎</span></li>
+                            <li><span class="stat-name">コーディング</span> <span class="stat-value">◯</span></li>
+                            <li><span class="stat-name">画像・動画生成</span> <span class="stat-value highlight-text">◎ 日本語の画像を生成可能</span></li>
+                            <li><span class="stat-name">汎用性</span> <span class="stat-value highlight-text">◎ NotebookLMの機能が優秀</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Magic Spells (Prompts) -->
+        <section id="spells" class="section">
+            <h2 class="section-title"><span class="icon">📖</span> 魔法の呪文集 (プロンプト)</h2>
+            <div class="magic-book">
+                <div class="spell-item">
+                    <div class="spell-content">
+                        <p class="prompt-text">「ステップバイステップで考えて教えてください。一つずつ順を追って、論理的に説明してください。」</p>
+                    </div>
+                    <button class="copy-btn">コピー</button>
+                </div>
+                <div class="spell-item">
+                    <div class="spell-content">
+                        <p class="prompt-text">「すぐに回答を出さず、最適な答えを出すために、まずは私に必要な質問を3つ投げかけてください。」</p>
+                    </div>
+                    <button class="copy-btn">コピー</button>
+                </div>
+                <div class="spell-item">
+                    <div class="spell-content">
+                        <p class="prompt-text">「複数のアプローチを考えて、それぞれのメリットとデメリットを比較検討して教えてください。」</p>
+                    </div>
+                    <button class="copy-btn">コピー</button>
+                </div>
+                <div class="spell-item">
+                    <div class="spell-content">
+                        <p class="prompt-text">「あなたは[〇〇]の専門家です。プロの視点で、妥協せずに答えてください。」</p>
+                    </div>
+                    <button class="copy-btn">コピー</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Class Change (Paid Plans) -->
+        <section id="classes" class="section">
+            <h2 class="section-title"><span class="icon">👑</span> 上位ジョブへのクラスチェンジ</h2>
+            <p class="section-desc">月額3000円前後で解放される真の力</p>
+            <div class="card-grid jobs-grid">
+                
+                <!-- ChatGPT Plus -->
+                <div class="job-card chatgpt-job">
+                    <div class="job-header">
+                        <h3>ChatGPT Plus</h3>
+                        <span class="price">20ドル / 月</span>
+                    </div>
+                    <div class="job-features">
+                        <h4>【主な機能】</h4>
+                        <ul>
+                            <li>高度な推論モデル</li>
+                            <li>Deep Research</li>
+                            <li>音声モード(video/screensharing対応)</li>
+                            <li>Tasks, Custom GPTs, Projects</li>
+                            <li>画像生成</li>
+                        </ul>
+                        <div class="job-traits">
+                            <h4>【特徴】</h4>
+                            <p>文章、調査、画像、整理を1か所でやりやすい総合力が高いオールラウンダー。何でも広くやりたい人向け。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Claude Pro -->
+                <div class="job-card claude-job">
+                    <div class="job-header">
+                        <h3>Claude Pro</h3>
+                        <span class="price">20ドル / 月</span>
+                    </div>
+                    <div class="job-features">
+                        <h4>【主な機能】</h4>
+                        <ul>
+                            <li>Claude Code</li>
+                            <li>Cowork, Research</li>
+                            <li>無制限Projects</li>
+                            <li>Claude for Excel/PowerPoint(beta)</li>
+                        </ul>
+                        <div class="job-traits">
+                            <h4>【特徴】</h4>
+                            <p>コーディング、長文整理、仕事資料づくりに強い。特にClaude Codeが目玉の実務型。ゲーム制作やコード重視の人向け。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Google AI Pro -->
+                <div class="job-card gemini-job">
+                    <div class="job-header">
+                        <h3>Google AI Pro</h3>
+                        <span class="price">2,900円 / 月</span>
+                    </div>
+                    <div class="job-features">
+                        <h4>【主な機能】</h4>
+                        <ul>
+                            <li>Gemini 3.1 Pro, Deep Research</li>
+                            <li>Nano Banana Pro (画像生成)</li>
+                            <li>Veo 3.1 Fast (動画生成)</li>
+                            <li>毎月1,000 AIクレジット</li>
+                            <li>Flow, Whisk, Gemini Code Assist/CLI</li>
+                            <li>Antigravity枠拡大, NotebookLM上限5倍</li>
+                            <li>Workspace連携, 2TBストレージ</li>
+                        </ul>
+                        <div class="job-traits">
+                            <h4>【特徴】</h4>
+                            <p>Google機能ぜんぶ盛りの連携型プラン。勉強、Google連携、NotebookLM重視の人向け。</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section 5: Hidden Column: Hacker Terminal -->
+        <section id="terminal" class="section">
+            <h2 class="terminal-title">>> CONNECTION ESTABLISHED. ACCESSING HIDDEN DATA...</h2>
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                    <span class="terminal-user">taata@hacker-net: ~</span>
+                </div>
+                <div class="terminal-body">
+                    <p class="command"><span class="prompt">$</span> ./explain_antigravity.sh</p>
+                    <div class="terminal-output">
+                        <p><span class="highlight-var">[SYSTEM]</span> Loading file: Google Antigravity ...</p>
+                        <p>Googleのエージェント開発プラットフォーム。<br>Gemini 3 Pro ベースの開発環境。</p>
+                        <p>AIエージェントに、エディタ・ターミナル・ブラウザをまたいで複雑なコーディング作業を計画、実行、検証させられる。</p>
+                        <p class="highlight-success">>>> Google版の本格バイブコーディング環境。</p>
+                        <span class="cursor">_</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 たあたる会社.</p>
+    </footer>
+
+    <!-- Modals -->
+    <!-- ChatGPT Free Modal -->
+    <div id="modal-chatgpt" class="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-content chatgpt-modal">
+            <span class="close-btn" onclick="closeModal(event)">&times;</span>
+            <div class="modal-header">
+                <h2>ChatGPT Free</h2>
+                <span class="modal-price">0円 / 月</span>
+            </div>
+            <div class="modal-body">
+                <div class="info-block">
+                    <h3>【主な機能】</h3>
+                    <ul>
+                        <li>GPT-5 への限定アクセス</li>
+                        <li>GPT-5 thinking / mini</li>
+                        <li>Web検索</li>
+                        <li>ファイルアップロード（制限あり）</li>
+                        <li>音声機能 / 画像ツール（制限あり）</li>
+                        <li>Canvas</li>
+                        <li>Custom GPTs の利用</li>
+                        <li>Projects の作成と利用</li>
+                        <li>Memory</li>
+                        <li>macOSデスクトップアプリでのコード編集</li>
+                        <li>Deep Research（制限あり）</li>
+                    </ul>
+                </div>
+                <div class="info-block attention">
+                    <h3>【補足】</h3>
+                    <p>高度な機能は「使えるけど上限あり」が多い。<br>動画付きの高度音声やSora、Codex agent research previewは無料版には入っていない。</p>
+                </div>
+                <div class="info-block summary">
+                    <h3>【一言でいうと】</h3>
+                    <p class="highlight">無料でもかなり多機能な万能型</p>
+                </div>
+                <div class="info-block target-user">
+                    <h3>【無料版で向いてる人】</h3>
+                    <p>まず1つで色々試したい人</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Claude Free Modal -->
+    <div id="modal-claude" class="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-content claude-modal">
+            <span class="close-btn" onclick="closeModal(event)">&times;</span>
+            <div class="modal-header">
+                <h2>Claude Free</h2>
+                <span class="modal-price">0円 / 月</span>
+            </div>
+            <div class="modal-body">
+                <div class="info-block">
+                    <h3>【主な機能】</h3>
+                    <ul>
+                        <li>Claude の利用</li>
+                        <li>Claude Sonnet 4.6（現在のデフォルト）</li>
+                        <li>Artifacts</li>
+                        <li>Web search</li>
+                        <li>Web fetch</li>
+                        <li>コード実行</li>
+                        <li>ファイル作成</li>
+                        <li>画像の解析</li>
+                        <li>チャット履歴</li>
+                    </ul>
+                </div>
+                <div class="info-block attention">
+                    <h3>【補足】</h3>
+                    <p>毎日の使用量制限あり。<br>Web検索や長いURLの読み込みは、無料版の使用枠を大きく使う。<br>Proで追加されるのは、Claude Code、Cowork、Research、無制限Projects、Excel/PowerPoint beta など。</p>
+                </div>
+                <div class="info-block summary">
+                    <h3>【一言でいうと】</h3>
+                    <p class="highlight">無料でもかなり強いが、上限管理が大事</p>
+                </div>
+                <div class="info-block target-user">
+                    <h3>【無料版で向いてる人】</h3>
+                    <p>コード、資料、長文整理を試したい人</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gemini Free Modal -->
+    <div id="modal-gemini" class="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-content gemini-modal">
+            <span class="close-btn" onclick="closeModal(event)">&times;</span>
+            <div class="modal-header">
+                <h2>Gemini Free</h2>
+                <span class="modal-price">0円 / 月</span>
+            </div>
+            <div class="modal-body">
+                <div class="info-block">
+                    <h3>【主な機能】</h3>
+                    <ul>
+                        <li>Gemini アプリ</li>
+                        <li>Gemini 3 Flash へのアクセス</li>
+                        <li>Gemini 3.1 Pro への変動的アクセス</li>
+                        <li>画像生成と画像編集</li>
+                        <li>Deep Research</li>
+                        <li>Gemini Live</li>
+                        <li>Canvas / Gems / NotebookLM</li>
+                        <li>Flow / Whisk</li>
+                        <li>1日50 AI credits</li>
+                        <li>Googleストレージ 15GB</li>
+                    </ul>
+                </div>
+                <div class="info-block attention">
+                    <h3>【補足】</h3>
+                    <p>Gemini は無料版でもかなり機能が多い。<br>ただし上限は細かく変わることがある。</p>
+                </div>
+                <div class="info-block summary">
+                    <h3>【一言でいうと】</h3>
+                    <p class="highlight">無料版でも機能数がかなり多い学習・創作型</p>
+                </div>
+                <div class="info-block target-user">
+                    <h3>【無料版で向いてる人】</h3>
+                    <p>勉強、調べ学習、画像、NotebookLMを試したい人</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vanilla Tilt -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+    <!-- Custom Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
