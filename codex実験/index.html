@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ボクセルサンドボックス</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="game-root"></div>
+  <div id="hud">
+    <div id="crosshair"></div>
+    <div id="top-left">
+      <div id="hint">移動: WASD | ジャンプ: Space | 攻撃/破壊: 左クリック | 設置: 右クリック</div>
+      <div id="hint2">インベントリ: E | クラフト: C | 使用: F | 装備切替: 1-9</div>
+      <div id="coords">座標: X 0 / Y 0 / Z 0</div>
+      <div id="chunk">チャンク: 0, 0 | 読み込み: 0</div>
+      <div id="biome-time">バイオーム: 草原 | 時間: 昼</div>
+      <div id="health">HP: 100 / 100</div>
+      <div id="world">世界進行: 未開の辺境 | 巣破壊: 0</div>
+      <div id="enemies">敵: スライム 0 / ウッドマン 0 / レア 0</div>
+      <div id="town">町: なし</div>
+      <div id="nest">巣探知: 未所持</div>
+      <div id="break">採掘: -</div>
+      <div id="wand">装備: 素手</div>
+      <div id="message">メッセージ: 木を集めて木の剣を作ろう</div>
+    </div>
+    <div id="hand-container">
+      <div id="hand-view"></div>
+    </div>
+    <div id="hotbar"></div>
+    <div id="mobile-controls" class="hidden">
+      <div id="move-pad">
+        <button class="touch-btn move" id="touch-up">↑</button>
+        <div class="move-row">
+          <button class="touch-btn move" id="touch-left">←</button>
+          <button class="touch-btn move" id="touch-down">↓</button>
+          <button class="touch-btn move" id="touch-right">→</button>
+        </div>
+      </div>
+      <div id="action-pad">
+        <button class="touch-btn" id="touch-jump">Jump</button>
+        <button class="touch-btn" id="touch-attack">Attack</button>
+        <button class="touch-btn" id="touch-place">Place</button>
+        <button class="touch-btn" id="touch-use">Use</button>
+        <button class="touch-btn alt" id="touch-inventory">Bag</button>
+      </div>
+      <div id="look-pad">LOOK</div>
+    </div>
+    <div id="inventory" class="hidden">
+      <h2>インベントリ</h2>
+      <p>ドラッグで並び替えできます。クラフトは左右でレシピを選んで、ボタンか C キーで作成します。</p>
+      <div id="inventory-grid"></div>
+      <h3>クラフト選択</h3>
+      <div id="craft-selection">
+        <button class="craft-arrow" id="prev-recipe">&lt;</button>
+        <div id="recipe-view">
+          <div class="recipe-icon-large" id="recipe-icon"></div>
+          <div id="recipe-name">選択中のアイテム</div>
+          <div id="recipe-cost">必要素材: ---</div>
+          <button id="craft-btn">クラフト</button>
+        </div>
+        <button class="craft-arrow" id="next-recipe">&gt;</button>
+      </div>
+      <div id="craft-status">作れるレシピはここに表示されます</div>
+    </div>
+    <div id="center">
+      <h1>ボクセルサンドボックス</h1>
+      <p>クリックして開始</p>
+      <p>木と石を集めて装備を整え、巣を攻略しながら城壁都市と自然の世界を探索しよう。</p>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script src="scripts/data.js"></script>
+  <script src="scripts/world.js"></script>
+  <script src="scripts/systems.js"></script>
+  <script src="scripts/game.js"></script>
+</body>
+</html>
