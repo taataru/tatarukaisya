@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voxel FPS Recoil Trial Modular</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div id="overlay">
+    <div class="panel">
+      <p class="eyebrow">Split Build</p>
+      <h1>Voxel FPS Recoil Trial</h1>
+      <p><strong>Click Enter Range</strong> to lock the pointer and test movement, gravity, jumping, reload timing, recoil recovery, and voxel gunfeel.</p>
+      <p>Controls: WASD move, Mouse look, Space jump, Left click fire, R reload, 1/2/3 switch weapons, Esc unlock.</p>
+      <p>Weapons: Handgun, Assault Rifle, Shotgun. Targets: multiple Tetta Virus capsules with damage, flash, and knockback.</p>
+      <button id="playButton" type="button">ENTER RANGE</button>
+      <p id="loadNote">Loading split build...</p>
+    </div>
+  </div>
+
+  <div id="hud">
+    <div id="topInfo" class="card">WASD Move / Space Jump / Mouse Look / Left Click Fire / R Reload / 1 2 3 Switch</div>
+
+    <div id="statusCard" class="card">
+      <div id="statusTitle">Range Feed</div>
+      <div id="statusText">Hold the lane. Clear all Tetta Virus targets.</div>
+      <div id="targetText"></div>
+    </div>
+
+    <div id="weaponCard" class="card">
+      <div id="weaponName">HANDGUN</div>
+      <div id="weaponMeta">Balanced recoil / semi auto</div>
+      <div id="ammoText">10 / 30</div>
+      <div id="reloadText"></div>
+    </div>
+
+    <div id="targetCard" class="card">
+      <div id="targetName">Tetta Virus</div>
+      <div id="targetHp">HP 100</div>
+    </div>
+
+    <div id="crosshair">
+      <span class="top"></span>
+      <span class="right"></span>
+      <span class="bottom"></span>
+      <span class="left"></span>
+      <span class="center"></span>
+    </div>
+
+    <div id="hitMarker">
+      <span class="a"></span>
+      <span class="b"></span>
+      <span class="c"></span>
+      <span class="d"></span>
+    </div>
+  </div>
+
+  <div id="mobileHud" aria-hidden="true">
+    <div id="mobileLookZone"></div>
+
+    <div id="joystickWrap">
+      <div id="joystickBase">
+        <div id="joystickKnob"></div>
+      </div>
+    </div>
+
+    <div id="mobileButtons">
+      <button id="mobileFire" class="mobile-btn action-main" type="button">FIRE</button>
+      <button id="mobileJump" class="mobile-btn" type="button">JUMP</button>
+      <button id="mobileReload" class="mobile-btn" type="button">RELOAD</button>
+      <button id="mobileSwitch" class="mobile-btn" type="button">SWAP</button>
+    </div>
+  </div>
+  <script>
+    window.addEventListener("error", () => {
+      const loadNote = document.getElementById("loadNote");
+      if (loadNote) {
+        loadNote.textContent = "Split build loading failed. Reload this page.";
+        loadNote.classList.add("error");
+      }
+    });
+  </script>
+  <script src="./game.bundle.js"></script>
+</body>
+</html>
