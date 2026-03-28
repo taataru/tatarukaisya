@@ -10799,10 +10799,6 @@
         if (!ground) {
           continue;
         }
-        const groundStyle = ground.object?.userData?.colliderRef?.style;
-        if (groundStyle === "road") {
-          continue;
-        }
         const feetY = ground.height;
         if (hasSpawnConflict(x, feetY + 0.02, z, radius, height)) {
           continue;
@@ -10823,11 +10819,7 @@
       if (!ground) {
         continue;
       }
-      const groundStyle = ground.object?.userData?.colliderRef?.style;
       const feetY = ground.height;
-      if (groundStyle === "road") {
-        continue;
-      }
       if (hasSpawnConflict(x, feetY + 0.02, z, radius, height)) {
         continue;
       }
