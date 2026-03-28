@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,9 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Noto+Sans+JP:wght@400;700&display=swap"
+        rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -16,28 +19,44 @@
             --banana-dark: #2D2D2D;
             --banana-light: #FFFCED;
         }
+
         body {
             font-family: 'Outfit', 'Noto Sans JP', sans-serif;
             background-color: var(--banana-light);
             color: var(--banana-dark);
         }
+
         .yellow-gradient {
             background: linear-gradient(135deg, #FFE135 0%, #FFD700 100%);
         }
+
         .glass-card {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
         }
-        .tier-s { background-color: #FF7F7F; }
-        .tier-a { background-color: #FFBF7F; }
-        .tier-b { background-color: #FFFF7F; }
-        .tier-c { background-color: #BFFF7F; }
-        
+
+        .tier-s {
+            background-color: #FF7F7F;
+        }
+
+        .tier-a {
+            background-color: #FFBF7F;
+        }
+
+        .tier-b {
+            background-color: #FFFF7F;
+        }
+
+        .tier-c {
+            background-color: #BFFF7F;
+        }
+
         .banana-hover {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
         .banana-hover:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
@@ -45,59 +64,142 @@
 
         /* Clicker Animations & Advanced Styles */
         @keyframes conveyor {
-            0% { left: 100%; transform: translateY(-50%) rotate(0deg); }
-            100% { left: -100px; transform: translateY(-50%) rotate(-360deg); }
+            0% {
+                left: 100%;
+                transform: translateY(-50%) rotate(0deg);
+            }
+
+            100% {
+                left: -100px;
+                transform: translateY(-50%) rotate(-360deg);
+            }
         }
+
         .convey-item {
-            position: absolute; top: 50%; animation: conveyor 8s linear forwards;
+            position: absolute;
+            top: 50%;
+            animation: conveyor 8s linear forwards;
         }
+
         @keyframes staff-bob {
-            from { transform: translateY(0); }
-            to { transform: translateY(-8px); }
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-8px);
+            }
         }
-        .staff-bob { animation: staff-bob 0.6s infinite alternate ease-in-out; }
-        
+
+        .staff-bob {
+            animation: staff-bob 0.6s infinite alternate ease-in-out;
+        }
+
         @keyframes slam-crit {
-            0% { transform: scale(5) rotate(-20deg); opacity: 0; }
-            50% { transform: scale(1) rotate(0deg); opacity: 1; }
-            100% { transform: scale(1.2) translateY(-100px); opacity: 0; }
+            0% {
+                transform: scale(5) rotate(-20deg);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1.2) translateY(-100px);
+                opacity: 0;
+            }
         }
+
         .critical-text {
-            position: absolute; color: #FF4444; font-size: 50px; font-weight: 900;
-            text-shadow: 0 0 10px #fff, 0 0 20px #FFD700; z-index: 2000;
-            animation: slam-crit 0.6s forwards; pointer-events: none;
+            position: absolute;
+            color: #FF4444;
+            font-size: 50px;
+            font-weight: 900;
+            text-shadow: 0 0 10px #fff, 0 0 20px #FFD700;
+            z-index: 2000;
+            animation: slam-crit 0.6s forwards;
+            pointer-events: none;
         }
+
         @keyframes float-zzz {
-            0% { opacity: 1; transform: translate(-50%, 0); }
-            100% { opacity: 0; transform: translate(-30%, -40px) scale(1.5); }
+            0% {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-30%, -40px) scale(1.5);
+            }
         }
-        .zzz { animation: float-zzz 1.5s infinite; }
-        
+
+        .zzz {
+            animation: float-zzz 1.5s infinite;
+        }
+
         .particle {
-            position: absolute; pointer-events: none; z-index: 1000;
-            font-size: 30px; animation: fall 1s ease-out forwards;
+            position: absolute;
+            pointer-events: none;
+            z-index: 1000;
+            font-size: 30px;
+            animation: fall 1s ease-out forwards;
         }
+
         @keyframes fall {
-            0% { transform: translate(0,0) rotate(0deg); opacity: 1; }
-            100% { transform: translate(var(--dx), var(--dy)) rotate(360deg); opacity: 0; }
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(var(--dx), var(--dy)) rotate(360deg);
+                opacity: 0;
+            }
         }
-        
-        .sleeping { filter: grayscale(1) brightness(0.7); }
-        .fever { filter: drop-shadow(0 0 15px #FFD700); }
-        
+
+        .sleeping {
+            filter: grayscale(1) brightness(0.7);
+        }
+
+        .fever {
+            filter: drop-shadow(0 0 15px #FFD700);
+        }
+
         .pixel-border {
             box-shadow: -4px 0 0 0 black, 4px 0 0 0 black, 0 -4px 0 0 black, 0 4px 0 0 black;
             border-radius: 4px;
         }
-        
-        .shop-item-disabled { filter: grayscale(1); opacity: 0.6; cursor: not-allowed; }
-        
+
+        .shop-item-disabled {
+            filter: grayscale(1);
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         /* Layout overrides for game */
-        .game-panel { background: #1a1a1a; color: #eee; }
-        .tab-active { background: #4a5568; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #2d3748; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 3px; }
+        .game-panel {
+            background: #1a1a1a;
+            color: #eee;
+        }
+
+        .tab-active {
+            background: #4a5568;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #2d3748;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #4a5568;
+            border-radius: 3px;
+        }
 
         body.singularity-mode {
             background-color: #0f172a;
@@ -105,6 +207,7 @@
         }
     </style>
 </head>
+
 <body class="min-h-screen">
 
     <!-- Header Section -->
@@ -122,41 +225,51 @@
     </header>
 
     <main class="max-w-6xl mx-auto py-12 px-6 space-y-16">
-        
+
         <!-- Advanced Banana Clicker Section -->
-        <section id="clicker-section" class="flex flex-col lg:grid lg:grid-cols-4 gap-4 items-stretch min-h-[600px] lg:h-[700px]">
-            
+        <section id="clicker-section"
+            class="flex flex-col lg:grid lg:grid-cols-4 gap-4 items-stretch min-h-[600px] lg:h-[700px]">
+
             <!-- Left Side: Game View (Evolvable) -->
-            <div class="flex-1 lg:col-span-3 glass-card rounded-3xl relative overflow-hidden flex flex-col border-4 border-yellow-400 bg-slate-50 transition-colors duration-1000 min-h-[450px]" id="game-view">
-                
+            <div class="flex-1 lg:col-span-3 glass-card rounded-3xl relative overflow-hidden flex flex-col border-4 border-yellow-400 bg-slate-50 transition-colors duration-1000 min-h-[450px]"
+                id="game-view">
+
                 <!-- Display Bar -->
                 <div class="h-20 bg-gray-900 flex items-center justify-between px-4 lg:px-6 z-50 text-white shrink-0">
                     <div class="flex gap-2 lg:gap-4 flex-wrap">
-                        <div class="flex items-center gap-2 bg-gray-800 px-2 lg:px-3 py-1 border-2 border-yellow-600 rounded">
+                        <div
+                            class="flex items-center gap-2 bg-gray-800 px-2 lg:px-3 py-1 border-2 border-yellow-600 rounded">
                             <span class="text-xl lg:text-2xl">🍌</span>
                             <div class="flex flex-col">
-                                <span class="text-[8px] lg:text-[10px] text-gray-400 font-bold uppercase leading-none">Bananas</span>
-                                <span class="font-black text-yellow-400 leading-tight text-sm lg:text-lg" id="ui-money">0</span>
+                                <span
+                                    class="text-[8px] lg:text-[10px] text-gray-400 font-bold uppercase leading-none">Bananas</span>
+                                <span class="font-black text-yellow-400 leading-tight text-sm lg:text-lg"
+                                    id="ui-money">0</span>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2 bg-gray-800 px-2 lg:px-3 py-1 border-2 border-gray-600 rounded">
+                        <div
+                            class="flex items-center gap-2 bg-gray-800 px-2 lg:px-3 py-1 border-2 border-gray-600 rounded">
                             <span class="text-xl lg:text-2xl">⏱️</span>
                             <div class="flex flex-col">
-                                <span class="text-[8px] lg:text-[10px] text-gray-400 font-bold uppercase leading-none">BPS</span>
-                                <span class="font-bold text-green-400 leading-tight text-xs lg:text-base" id="ui-auto">0</span>
+                                <span
+                                    class="text-[8px] lg:text-[10px] text-gray-400 font-bold uppercase leading-none">BPS</span>
+                                <span class="font-bold text-green-400 leading-tight text-xs lg:text-base"
+                                    id="ui-auto">0</span>
                             </div>
                         </div>
                     </div>
-                    
-                    <div id="ui-prestige-info" class="hidden items-center gap-2 bg-purple-900/80 px-3 py-1 border-2 border-purple-500 rounded-full">
+
+                    <div id="ui-prestige-info"
+                        class="hidden items-center gap-2 bg-purple-900/80 px-3 py-1 border-2 border-purple-500 rounded-full">
                         <span class="text-lg">✨</span>
                         <div class="flex items-center gap-1">
                             <span class="text-[8px] text-purple-200 font-bold hidden md:inline">SOULS:</span>
                             <span class="font-black text-white text-xs lg:text-base" id="ui-souls">0</span>
                         </div>
                     </div>
-                    
-                    <div id="ui-purchases-badge" class="flex items-center gap-2 bg-yellow-600/30 px-3 py-1 border-2 border-yellow-500 rounded-full">
+
+                    <div id="ui-purchases-badge"
+                        class="flex items-center gap-2 bg-yellow-600/30 px-3 py-1 border-2 border-yellow-500 rounded-full">
                         <span class="text-lg">🛒</span>
                         <div class="flex items-center gap-1">
                             <span class="text-[8px] text-yellow-200 font-bold hidden md:inline">SALES:</span>
@@ -168,49 +281,65 @@
                 <!-- Main Click/Stage Area -->
                 <div class="flex-1 relative flex flex-col justify-center items-center overflow-hidden">
                     <!-- Click Power Label -->
-                    <div class="bg-gray-800/80 text-white px-4 py-1 mb-4 text-lg border-2 border-yellow-400 rounded-full shadow-lg z-20">
-                        <span id="ui-click-power">1</span> <span class="text-xs text-yellow-300 font-bold">/ CLICK</span>
+                    <div
+                        class="bg-gray-800/80 text-white px-4 py-1 mb-4 text-lg border-2 border-yellow-400 rounded-full shadow-lg z-20">
+                        <span id="ui-click-power">1</span> <span class="text-xs text-yellow-300 font-bold">/
+                            CLICK</span>
                     </div>
 
                     <!-- Evolutionary Clicker -->
                     <div id="banana-click-area" class="cursor-pointer z-20 group relative">
-                        <div id="ui-main-icon" class="text-[140px] select-none group-hover:scale-110 transition-transform duration-200 active:scale-95 drop-shadow-[0_20px_40px_rgba(0,0,0,0.2)]">
+                        <div id="ui-main-icon"
+                            class="text-[140px] select-none group-hover:scale-110 transition-transform duration-200 active:scale-95 drop-shadow-[0_20px_40px_rgba(0,0,0,0.2)]">
                             🍌
                         </div>
-                        <div id="ui-shop-name" class="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap bg-black text-white text-xs font-black px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div id="ui-shop-name"
+                            class="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap bg-black text-white text-xs font-black px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                             Normal Banana
                         </div>
                     </div>
 
                     <!-- Staff Stage Area -->
-                    <div id="staff-stage" class="absolute bottom-12 left-0 w-full flex justify-center items-end gap-4 md:gap-8 px-8 z-10 pointer-events-none h-32">
+                    <div id="staff-stage"
+                        class="absolute bottom-12 left-0 w-full flex justify-center items-end gap-4 md:gap-8 px-8 z-10 pointer-events-none h-32">
                         <!-- Staff icons will bob here -->
                     </div>
                 </div>
 
                 <!-- Conveyor Belt -->
-                <div class="h-20 bg-yellow-200/50 border-t-4 border-yellow-400 relative overflow-hidden flex items-center z-30 shadow-inner shrink-0" style="background-image: repeating-linear-gradient(45deg, #fef08a, #fef08a 20px, #fde047 20px, #fde047 40px);">
+                <div class="h-20 bg-yellow-200/50 border-t-4 border-yellow-400 relative overflow-hidden flex items-center z-30 shadow-inner shrink-0"
+                    style="background-image: repeating-linear-gradient(45deg, #fef08a, #fef08a 20px, #fde047 20px, #fde047 40px);">
                     <div id="conveyor" class="relative w-full h-full"></div>
                 </div>
             </div>
 
             <!-- Right Side: Control Panel -->
-            <div class="flex-1 lg:col-span-1 game-panel rounded-3xl flex flex-col overflow-hidden border-4 border-gray-800 shadow-2xl min-h-[300px]">
+            <div
+                class="flex-1 lg:col-span-1 game-panel rounded-3xl flex flex-col overflow-hidden border-4 border-gray-800 shadow-2xl min-h-[300px]">
                 <!-- Tab Headers -->
                 <div class="flex bg-black shrink-0">
-                    <button id="tab-btn-shop" onclick="switchTab('shop')" class="flex-1 py-3 text-[9px] lg:text-[10px] font-black border-r border-gray-800 hover:bg-gray-800 transition-colors tab-active">EVOLVE</button>
-                    <button id="tab-btn-staff" onclick="switchTab('staff')" class="flex-1 py-3 text-[9px] lg:text-[10px] font-black border-r border-gray-800 hover:bg-gray-800 transition-colors">STAFF</button>
-                    <button id="tab-btn-upgrade" onclick="switchTab('upgrade')" class="flex-1 py-3 text-[9px] lg:text-[10px] font-black border-r border-gray-800 hover:bg-gray-800 transition-colors">BUFS</button>
-                    <button id="tab-btn-prestige" onclick="switchTab('prestige')" class="flex-1 py-3 text-[9px] lg:text-[10px] font-black text-purple-400 hover:bg-purple-900 transition-colors hidden">SOUL</button>
+                    <button id="tab-btn-shop" onclick="switchTab('shop')"
+                        class="flex-1 py-3 text-[9px] lg:text-[10px] font-black border-r border-gray-800 hover:bg-gray-800 transition-colors tab-active">EVOLVE</button>
+                    <button id="tab-btn-staff" onclick="switchTab('staff')"
+                        class="flex-1 py-3 text-[9px] lg:text-[10px] font-black border-r border-gray-800 hover:bg-gray-800 transition-colors">STAFF</button>
+                    <button id="tab-btn-upgrade" onclick="switchTab('upgrade')"
+                        class="flex-1 py-3 text-[9px] lg:text-[10px] font-black border-r border-gray-800 hover:bg-gray-800 transition-colors">BUFS</button>
+                    <button id="tab-btn-achievements" onclick="switchTab('achievements')"
+                        class="flex-1 py-3 text-[9px] lg:text-[10px] font-black border-r border-gray-800 hover:bg-gray-800 transition-colors text-yellow-500">ACHV</button>
+                    <button id="tab-btn-prestige" onclick="switchTab('prestige')"
+                        class="flex-1 py-3 text-[9px] lg:text-[10px] font-black text-purple-400 hover:bg-purple-900 transition-colors hidden text-[8px]">SOUL</button>
                 </div>
 
                 <!-- Purchase Mode -->
                 <div class="flex justify-between items-center px-4 py-2 bg-gray-900 border-b border-gray-800 shrink-0">
                     <span class="text-[9px] font-bold text-gray-500 uppercase">Buy Mode:</span>
                     <div class="flex gap-1 bg-black p-1 rounded-lg">
-                        <button id="buy-mode-1" onclick="setBuyMode(1)" class="px-2 py-1 text-[9px] font-bold rounded bg-yellow-600 text-black">x1</button>
-                        <button id="buy-mode-10" onclick="setBuyMode(10)" class="px-2 py-1 text-[9px] font-bold rounded text-gray-400 hover:bg-gray-800">x10</button>
-                        <button id="buy-mode-max" onclick="setBuyMode('MAX')" class="px-2 py-1 text-[9px] font-bold rounded text-gray-400 hover:bg-gray-800">MAX</button>
+                        <button id="buy-mode-1" onclick="setBuyMode(1)"
+                            class="px-2 py-1 text-[9px] font-bold rounded bg-yellow-600 text-black">x1</button>
+                        <button id="buy-mode-10" onclick="setBuyMode(10)"
+                            class="px-2 py-1 text-[9px] font-bold rounded text-gray-400 hover:bg-gray-800">x10</button>
+                        <button id="buy-mode-max" onclick="setBuyMode('MAX')"
+                            class="px-2 py-1 text-[9px] font-bold rounded text-gray-400 hover:bg-gray-800">MAX</button>
                     </div>
                 </div>
 
@@ -220,18 +349,30 @@
                     <div id="pane-shop" class="space-y-2"></div>
                     <div id="pane-staff" class="hidden space-y-2"></div>
                     <div id="pane-upgrade" class="hidden space-y-2"></div>
+                    <div id="pane-achievements" class="hidden space-y-2">
+                        <div class="text-center p-2">
+                           <h3 class="text-xs font-black text-yellow-500 uppercase tracking-tighter">Achievement Progress</h3>
+                           <div class="text-[9px] text-gray-500 mb-2">Buy each type of banana for a badge!</div>
+                        </div>
+                        <div id="achievements-list" class="space-y-2"></div>
+                    </div>
                     <div id="pane-prestige" class="hidden space-y-4">
                         <div class="bg-purple-900/30 border-2 border-purple-500 p-4 rounded-2xl text-center">
-                            <h3 class="text-sm font-black text-purple-400 mb-2 uppercase tracking-tighter">Banana Singularity</h3>
-                            <p class="text-[9px] text-purple-200 mb-4 opacity-70">Reset all progress for Golden Souls. Higher income yield more souls.</p>
+                            <h3 class="text-sm font-black text-purple-400 mb-2 uppercase tracking-tighter">Banana
+                                Singularity</h3>
+                            <p class="text-[9px] text-purple-200 mb-4 opacity-70">Reset all progress for Golden Souls.
+                                Higher income yield more souls.</p>
                             <div class="text-xs mb-4">
                                 Gained Souls: <span id="pending-souls" class="font-black text-white text-lg">0</span>
                             </div>
-                            <button onclick="doPrestige()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-black py-2 rounded-xl border-b-4 border-purple-800 active:translate-y-1 active:border-b-0 transition-all text-xs">
+                            <button onclick="doPrestige()"
+                                class="w-full bg-purple-600 hover:bg-purple-500 text-white font-black py-2 rounded-xl border-b-4 border-purple-800 active:translate-y-1 active:border-b-0 transition-all text-xs">
                                 REACH SINGULARITY
                             </button>
                         </div>
-                        <div class="text-[10px] font-black text-purple-400 border-b border-purple-500 pb-2 uppercase text-center">Spectral Buffs</div>
+                        <div
+                            class="text-[10px] font-black text-purple-400 border-b border-purple-500 pb-2 uppercase text-center">
+                            Spectral Buffs</div>
                         <div id="prestige-upgrades-list" class="space-y-2"></div>
                     </div>
                 </div>
@@ -244,26 +385,34 @@
                 <div class="h-8 w-2 bg-yellow-500 rounded-full"></div>
                 <h2 class="text-2xl font-bold">総合評価ティア表</h2>
             </div>
-            
+
             <div class="rounded-2xl overflow-hidden shadow-xl border-4 border-gray-800">
                 <!-- S Tier -->
                 <div class="flex border-b-2 border-gray-800">
-                    <div class="tier-s w-20 md:w-32 flex items-center justify-center text-4xl font-black text-black border-r-2 border-gray-800">S</div>
+                    <div
+                        class="tier-s w-20 md:w-32 flex items-center justify-center text-4xl font-black text-black border-r-2 border-gray-800">
+                        S</div>
                     <div id="tier-s-content" class="flex-1 bg-white p-4 flex flex-wrap gap-4 min-h-[80px]"></div>
                 </div>
                 <!-- A Tier -->
                 <div class="flex border-b-2 border-gray-800">
-                    <div class="tier-a w-20 md:w-32 flex items-center justify-center text-4xl font-black text-black border-r-2 border-gray-800">A</div>
+                    <div
+                        class="tier-a w-20 md:w-32 flex items-center justify-center text-4xl font-black text-black border-r-2 border-gray-800">
+                        A</div>
                     <div id="tier-a-content" class="flex-1 bg-white p-4 flex flex-wrap gap-4 min-h-[80px]"></div>
                 </div>
                 <!-- B Tier -->
                 <div class="flex border-b-2 border-gray-800">
-                    <div class="tier-b w-20 md:w-32 flex items-center justify-center text-4xl font-black text-black border-r-2 border-gray-800">B</div>
+                    <div
+                        class="tier-b w-20 md:w-32 flex items-center justify-center text-4xl font-black text-black border-r-2 border-gray-800">
+                        B</div>
                     <div id="tier-b-content" class="flex-1 bg-white p-4 flex flex-wrap gap-4 min-h-[80px]"></div>
                 </div>
                 <!-- C Tier -->
                 <div class="flex">
-                    <div class="tier-c w-20 md:w-32 flex items-center justify-center text-4xl font-black text-black border-r-2 border-gray-800">C</div>
+                    <div
+                        class="tier-c w-20 md:w-32 flex items-center justify-center text-4xl font-black text-black border-r-2 border-gray-800">
+                        C</div>
                     <div id="tier-c-content" class="flex-1 bg-white p-4 flex flex-wrap gap-4 min-h-[80px]"></div>
                 </div>
             </div>
@@ -275,7 +424,7 @@
                 <div class="h-8 w-2 bg-yellow-500 rounded-full"></div>
                 <h2 class="text-2xl font-bold">詳細データ比較</h2>
             </div>
-            
+
             <div id="comparison-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Cards will be injected here -->
             </div>
@@ -337,7 +486,8 @@
             upgrades: { clickPower: 0, staffPower: 0, critChance: 0, critDamage: 0, antiSleep: 0, rareRate: 0 },
             prestige: { globalMult: 0, startMoney: 0, clickBoost: 0 },
             isSingularity: false,
-            realPurchases: 0
+            realPurchases: 0,
+            unlockedAchievements: []
         };
 
         let activeStaff = [];
@@ -426,9 +576,11 @@
         // --- UI Rendering ---
         function switchTab(tabId) {
             currentTab = tabId;
-            ['shop', 'staff', 'upgrade', 'prestige'].forEach(t => {
-                document.getElementById(`tab-btn-${t}`).classList.toggle('tab-active', t === tabId);
-                document.getElementById(`pane-${t}`).classList.toggle('hidden', t !== tabId);
+            ['shop', 'staff', 'upgrade', 'prestige', 'achievements'].forEach(t => {
+                const btn = document.getElementById(`tab-btn-${t}`);
+                const pane = document.getElementById(`pane-${t}`);
+                if (btn) btn.classList.toggle('tab-active', t === tabId);
+                if (pane) pane.classList.toggle('hidden', t !== tabId);
             });
             updateUI();
         }
@@ -463,13 +615,14 @@
             document.getElementById('ui-main-icon').innerText = SHOPS[state.shopIdx].icon;
             document.getElementById('ui-shop-name').innerText = SHOPS[state.shopIdx].name;
             document.getElementById('ui-souls').innerText = state.souls;
-            document.getElementById('pending-souls').innerText = Math.floor(Math.pow(state.totalMoney / 100000, 1/2.5));
+            document.getElementById('pending-souls').innerText = Math.floor(Math.pow(state.totalMoney / 100000, 1 / 2.5));
 
             if (currentTab === 'shop') renderShop();
             if (currentTab === 'staff') renderStaff();
             if (currentTab === 'upgrade') renderUpgrade();
             if (currentTab === 'prestige') renderPrestige();
-            
+            if (currentTab === 'achievements') renderAchievements();
+
             document.getElementById('ui-real-purchases').innerText = state.realPurchases || 0;
 
             if (!isPrestigeUnlocked && state.totalMoney >= 100000) {
@@ -516,16 +669,25 @@
             }
         }
 
-        function renderPrestige() {
-            const list = document.getElementById('prestige-upgrades-list'); list.innerHTML = '';
-            for (let id in PRESTIGE_UPGRADES) {
-                const info = PRESTIGE_UPGRADES[id]; const level = state.prestige[id];
-                const cost = Math.floor(info.costStart * Math.pow(info.costScale, level));
-                list.innerHTML += `<div class="bg-gray-900 p-3 rounded-2xl border border-purple-800 flex justify-between items-center"><div class="flex-1"><div class="font-black text-[10px] text-purple-400 uppercase">${info.name} Lv.${level}</div><div class="text-[9px] text-gray-500">${info.desc}</div><div class="font-black text-purple-300 text-[10px] mt-1">✨ ${cost} Souls</div></div><button onclick="buyPrestigeUpgrade('${id}')" class="px-3 py-1 rounded-lg font-black text-[10px] ${state.souls >= cost ? 'bg-purple-600 hover:bg-purple-500 text-white' : 'bg-gray-800 text-gray-600 cursor-not-allowed'}" ${state.souls < cost ? 'disabled' : ''}>GET</button></div>`;
+        function renderAchievements() {
+            const pane = document.getElementById('pane-achievements');
+            const list = document.getElementById('achievements-list');
+            list.innerHTML = '';
+            if (!state.unlockedAchievements || state.unlockedAchievements.length === 0) {
+                list.innerHTML = `<div class="text-center text-gray-500 text-xs py-4 font-bold border-2 border-dashed border-gray-400 rounded-xl">まだ実績がありません。<br><span class="text-yellow-600">下のカタログからバナナを買ってみよう！</span></div>`;
+            } else {
+                state.unlockedAchievements.forEach(achv => {
+                    list.innerHTML += `<div class="bg-yellow-100 border-2 border-yellow-500 rounded-xl p-3 flex items-center justify-between shadow-sm">
+                        <div class="flex items-center gap-2">
+                            <span class="text-2xl drop-shadow">🏆</span>
+                            <span class="font-black text-gray-800 text-xs">${achv} のバナナを入手！</span>
+                        </div>
+                        <span class="text-[9px] text-yellow-800 font-black bg-yellow-300 px-2 py-1 rounded-full">達成</span>
+                    </div>`;
+                });
             }
         }
 
-        // --- Interaction Logic ---
         function clickBanana(e) {
             initAudio(); let isCrit = Math.random() < (0.05 + state.upgrades.critChance * 0.01);
             let pwr = cachedClickPower * (isCrit ? (10 + state.upgrades.critDamage * 0.5) : 1);
@@ -537,7 +699,7 @@
             updateUI();
         }
 
-        function buyEvolution() { if (state.shopIdx < SHOPS.length - 1 && state.money >= SHOPS[state.shopIdx+1].cost) { state.money -= SHOPS[state.shopIdx+1].cost; state.shopIdx++; playSound('buy'); calculatePowers(); updateUI(); } }
+        function buyEvolution() { if (state.shopIdx < SHOPS.length - 1 && state.money >= SHOPS[state.shopIdx + 1].cost) { state.money -= SHOPS[state.shopIdx + 1].cost; state.shopIdx++; playSound('buy'); calculatePowers(); updateUI(); } }
         function buyStaff(id) {
             let info = STAFF_INFO[id]; let level = state.staff[id]; let amt = buyMode; let cost = 0;
             if (buyMode === 'MAX') { let res = getMaxAffordable(info.baseCost, level, state.money); amt = res.amount; cost = res.cost; }
@@ -580,12 +742,12 @@
         function shakeScreen() { document.getElementById('game-view').classList.add('shake-small'); setTimeout(() => document.getElementById('game-view').classList.remove('shake-small'), 200); }
         function spawnParticle(x, y, char) {
             const p = document.createElement('div'); p.className = 'particle'; p.innerText = char; p.style.left = x + 'px'; p.style.top = y + 'px';
-            p.style.setProperty('--dx', (Math.random()-0.5)*200+'px'); p.style.setProperty('--dy', (Math.random()-0.5)*200-100+'px');
+            p.style.setProperty('--dx', (Math.random() - 0.5) * 200 + 'px'); p.style.setProperty('--dy', (Math.random() - 0.5) * 200 - 100 + 'px');
             document.body.appendChild(p); setTimeout(() => p.remove(), 1000);
         }
 
         function doPrestige() {
-            let souls = Math.floor(Math.pow(state.totalMoney / 100000, 1/2.5));
+            let souls = Math.floor(Math.pow(state.totalMoney / 100000, 1 / 2.5));
             if (souls <= 0) { alert("もっとバナナが必要です（総収益10万以上）"); return; }
             if (confirm("全てをリセットして黄金の魂を手に入れますか？")) {
                 state.money = state.prestige.startMoney * 100000; state.totalMoney = 0; state.souls += souls; state.shopIdx = 0;
@@ -599,40 +761,52 @@
             initAudio();
             const banana = bananaData.find(b => b.id === id);
             if (!banana) return;
-            
-            const bonus = banana.price * 100;
-            state.money += bonus;
-            state.totalMoney += bonus;
+
+            const cost = banana.price * 10; // 10x multiplier in banana currency
+            if (state.money < cost) {
+                alert("お金が足りません！ (必要: " + formatMoney(cost) + " 🍌)");
+                return;
+            }
+
+            state.money -= cost;
             state.realPurchases = (state.realPurchases || 0) + 1;
             
-            playSound('rare');
-            
+            let firstTime = false;
+            if (!state.unlockedAchievements.includes(banana.origin)) {
+                state.unlockedAchievements.push(banana.origin);
+                firstTime = true;
+                playSound('rare');
+            } else {
+                playSound('buy');
+            }
+
             // Visual feedback
             const toast = document.createElement('div');
             toast.className = 'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/90 backdrop-blur border-4 border-yellow-400 p-8 rounded-3xl shadow-2xl z-[3000] flex flex-col items-center gap-4 animate-bounce';
-            toast.innerHTML = `
-                <div class="text-6xl text-red-500 animate-pulse">❤️</div>
-                <div class="text-2xl font-black text-gray-800">${banana.origin}産バナナをご購入！</div>
-                <div class="text-xl font-bold text-yellow-600">投資ボーナス: +${formatMoney(bonus)} 🍌</div>
+            toast.innerHTML = firstTime ? `
+                <div class="text-6xl text-yellow-500 animate-pulse">🏆</div>
+                <div class="text-2xl font-black text-gray-800">${banana.origin}実績解除！</div>
+                <div class="text-xl font-bold text-red-600">消費: -${formatMoney(cost)} 🍌</div>
+            ` : `
+                <div class="text-6xl text-gray-500">🛒</div>
+                <div class="text-2xl font-black text-gray-800">${banana.origin}産のバナナを購入！</div>
+                <div class="text-xl font-bold text-red-600">消費: -${formatMoney(cost)} 🍌</div>
             `;
             document.body.appendChild(toast);
-            
+
             // Particle burst
-            for(let i=0; i<20; i++) {
-                spawnParticle(window.innerWidth/2, window.innerHeight/2, '🍌');
-                spawnParticle(window.innerWidth/2, window.innerHeight/2, '🎉');
+            for (let i = 0; i < 20; i++) {
+                spawnParticle(window.innerWidth / 2, window.innerHeight / 2, firstTime ? '🏆' : '🍌');
+                if (firstTime) spawnParticle(window.innerWidth / 2, window.innerHeight / 2, '🎉');
             }
 
             setTimeout(() => {
                 toast.classList.replace('animate-bounce', 'animate-fade-out');
                 setTimeout(() => toast.remove(), 1000);
-            }, 2000);
+            }, 2500);
 
             updateUI();
             saveGame();
-            
-            // Jump to clicker section logic
-            document.getElementById('clicker-section').scrollIntoView({ behavior: 'smooth' });
         }
 
         // --- Core Loops ---
@@ -732,14 +906,14 @@
             bananaData.forEach(banana => {
                 const tierId = `tier-${banana.rank.toLowerCase()}-content`;
                 const tierElement = document.getElementById(tierId);
-                
+
                 const chip = document.createElement('div');
                 chip.className = 'px-4 py-2 bg-yellow-100 border-2 border-yellow-400 rounded-full font-bold shadow-sm flex items-center gap-1 animate-fade-in group relative hover:bg-yellow-200 transition-colors cursor-pointer';
                 chip.innerHTML = `
                     <span class="text-xs">🍌</span> ${banana.origin}
                     <button onclick="event.stopPropagation(); buyRealBanana(${banana.id})" class="ml-1 bg-yellow-500 text-white text-[9px] px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">🛒 購入</button>
                 `;
-                
+
                 tierElement.appendChild(chip);
             });
         }
@@ -758,11 +932,11 @@
 
         function renderComparisonCards() {
             const grid = document.getElementById('comparison-grid');
-            
+
             bananaData.forEach(banana => {
                 const card = document.createElement('div');
                 card.className = `glass-card rounded-2xl p-6 banana-hover relative overflow-hidden`;
-                
+
                 card.innerHTML = `
                     <div class="absolute top-0 right-0 w-16 h-16 yellow-gradient rounded-bl-3xl flex items-center justify-center shadow-inner">
                         <span class="text-2xl font-black">${banana.rank}</span>
@@ -803,11 +977,12 @@
                         </button>
                     </div>
                 `;
-                
+
                 grid.appendChild(card);
             });
         }
 
     </script>
 </body>
+
 </html>
