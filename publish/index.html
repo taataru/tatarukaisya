@@ -1,46 +1,93 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Voxel FPS Recoil Trial Modular</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Voxel Soldier Survival Range</title>
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-<div id="overlay">
+  <div id="overlay">
     <div class="panel">
-      <p class="eyebrow">Split Build</p>
-      <h1>Voxel FPS Recoil Trial</h1>
-      <p><strong>Click Enter Range</strong> to lock the pointer and test movement, gravity, jumping, reload timing, recoil recovery, and voxel gunfeel.</p>
-      <p>Controls: WASD move, Mouse look, Space jump, Left click fire, R reload, 1/2/3 switch weapons, Esc unlock.</p>
-      <p>Weapons: Handgun, Assault Rifle, Shotgun. Targets: multiple Tetta Virus capsules with damage, flash, and knockback.</p>
-      <button id="playButton" type="button">ENTER RANGE</button>
-      <p id="loadNote">Loading split build...</p>
+      <p class="eyebrow">Planet Cubis // Third-Person Survival</p>
+      <h1>Voxel Soldier: Cubis Breakout</h1>
+      <p>
+        崩壊した近未来都市で、ボクセル・ソルジャーとして包囲網を突破します。
+        三人称視点で移動し、敵を迎撃しながら素材を集め、弾薬とグレネードを維持してください。
+      </p>
+      <p>
+        PC: WASD移動 / マウス視点 / 左クリック射撃 / Spaceジャンプ / Rリロード / 1 2 3武器切替 /
+        C弾薬クラフト / Fグレネード作成 / Gグレネード投擲
+      </p>
+      <p>
+        Mobile: 左スティック移動 / 右スワイプ視点 / ボタンで射撃・ジャンプ・リロード・武器切替・グレネード・クラフト
+      </p>
+      <button id="playButton" type="button">DEPLOY</button>
+      <p id="loadNote">Loading battlefield...</p>
     </div>
   </div>
 
   <div id="hud">
-    <div id="topInfo" class="card">WASD Move / Space Jump / Mouse Look / Left Click Fire / R Reload / 1 2 3 Switch</div>
-
-    <div id="statusCard" class="card">
-      <div id="statusTitle">Range Feed</div>
-      <div id="statusText">Hold the lane. Clear all Tetta Virus targets.</div>
-      <div id="targetText"></div>
+    <div id="missionCard" class="hud-panel">
+      <div id="missionTitle">CUBIS SURVIVAL</div>
+      <div id="missionText">Survive the incursion, salvage resources, and clear the Tetta swarm.</div>
     </div>
 
-    <div id="weaponCard" class="card">
+    <div id="statsCard" class="hud-panel">
+      <div class="panel-title">PLAYER STATS</div>
+      <div class="stat-row">
+        <span>HP</span>
+        <span id="hpValue">100 / 100</span>
+      </div>
+      <div class="stat-bar"><span id="hpFill"></span></div>
+      <div class="stat-row">
+        <span>ARMOR</span>
+        <span id="armorValue">60 / 100</span>
+      </div>
+      <div class="stat-bar armor"><span id="armorFill"></span></div>
+      <div class="stat-grid">
+        <div>
+          <span class="stat-label">LEVEL</span>
+          <strong id="levelValue">1</strong>
+        </div>
+        <div>
+          <span class="stat-label">SCORE</span>
+          <strong id="scoreValue">0</strong>
+        </div>
+        <div>
+          <span class="stat-label">SCRAP</span>
+          <strong id="materialsValue">0</strong>
+        </div>
+      </div>
+    </div>
+
+    <div id="minimapCard" class="hud-panel">
+      <div class="panel-title">MINIMAP</div>
+      <canvas id="minimapCanvas" width="176" height="176"></canvas>
+      <div id="minimapInfo">Enemy dots track nearby hostiles.</div>
+    </div>
+
+    <div id="playerCard" class="hud-panel">
+      <div id="playerName">PLAYER: VOXEL SOLDIER</div>
+      <div id="playerMeta">Blue frame assault unit // Expedition Team Cubis</div>
+    </div>
+
+    <div id="weaponCard" class="hud-panel">
+      <div id="weaponLabel">WEAPON AMMO</div>
       <div id="weaponName">HANDGUN</div>
       <div id="weaponMeta">Balanced recoil / semi auto</div>
       <div id="ammoText">10 / 30</div>
+      <div id="grenadeText">GRENADES x2</div>
+      <div id="craftText">C AMMO // F GRENADE // G THROW</div>
       <div id="reloadText"></div>
     </div>
 
-    <div id="targetCard" class="card">
+    <div id="targetCard" class="hud-panel">
       <div id="targetName">Tetta Virus</div>
-      <div id="targetHp">HP 100</div>
+      <div id="targetHp">HP 100 / 100</div>
     </div>
 
-    <div id="crosshair">
+    <div id="crosshair" aria-hidden="true">
       <span class="top"></span>
       <span class="right"></span>
       <span class="bottom"></span>
@@ -48,7 +95,7 @@
       <span class="center"></span>
     </div>
 
-    <div id="hitMarker">
+    <div id="hitMarker" aria-hidden="true">
       <span class="a"></span>
       <span class="b"></span>
       <span class="c"></span>
@@ -70,20 +117,23 @@
       <button id="mobileJump" class="mobile-btn" type="button">JUMP</button>
       <button id="mobileReload" class="mobile-btn" type="button">RELOAD</button>
       <button id="mobileSwitch" class="mobile-btn" type="button">SWAP</button>
+      <button id="mobileGrenade" class="mobile-btn" type="button">GREN</button>
+      <button id="mobileCraft" class="mobile-btn" type="button">CRAFT</button>
     </div>
   </div>
 
   <div id="rotateHint" hidden>
     <div class="rotate-card">
       <div class="rotate-title">Rotate Device</div>
-      <div class="rotate-copy">Mobile play is tuned for landscape view. Turn your phone sideways for the best controls.</div>
+      <div class="rotate-copy">Mobile combat is tuned for landscape view. Turn your phone sideways for the best third-person controls.</div>
     </div>
   </div>
+
   <script>
     window.addEventListener("error", () => {
       const loadNote = document.getElementById("loadNote");
       if (loadNote) {
-        loadNote.textContent = "Split build loading failed. Reload this page.";
+        loadNote.textContent = "Battlefield loading failed. Reload this page.";
         loadNote.classList.add("error");
       }
     });
