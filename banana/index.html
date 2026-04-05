@@ -465,7 +465,6 @@
             staffPower: { id: "staffPower", name: "バナナ研修", desc: "自動収益+10%", baseCost: 2000, max: 100 },
             critChance: { id: "critChance", name: "急所見極め", desc: "クリティカル率+1%", baseCost: 5000, max: 50 },
             critDamage: { id: "critDamage", name: "バナナ一閃", desc: "クリティカル威力+50%", baseCost: 10000, max: 50 },
-            antiSleep: { id: "antiSleep", name: "エナドリ", desc: "サボり率低下", baseCost: 15000, max: 10 },
             rareRate: { id: "rareRate", name: "黄金の風", desc: "レア出現率UP", baseCost: 50000, max: 20 }
         };
 
@@ -483,7 +482,7 @@
             souls: 0,
             shopIdx: 0,
             staff: { monkey: 0, farmer: 0, harvester: 0, manager: 0, god: 0 },
-            upgrades: { clickPower: 0, staffPower: 0, critChance: 0, critDamage: 0, antiSleep: 0, rareRate: 0 },
+            upgrades: { clickPower: 0, staffPower: 0, critChance: 0, critDamage: 0, rareRate: 0 },
             prestige: { globalMult: 0, startMoney: 0, clickBoost: 0 },
             isSingularity: false,
             realPurchases: 0,
@@ -724,7 +723,6 @@
             div.innerHTML = `<div class="absolute -top-10 bg-black text-white px-2 py-1 rounded text-[10px] font-black opacity-0 transition-opacity z-30">...</div><div class="text-4xl staff-bob drop-shadow-lg">${info.icon}</div>`;
             document.getElementById('staff-stage').appendChild(div);
             const obj = { id, el: div, state: 'normal' }; activeStaff.push(obj);
-            div.onclick = (e) => { e.stopPropagation(); initAudio(); if (obj.state === 'sleeping') { obj.state = 'fever'; div.classList.replace('sleeping', 'fever'); div.querySelector('div').innerText = '🔥AWAKE!'; div.querySelector('div').style.opacity = 1; playSound('click'); setTimeout(() => { obj.state = 'normal'; div.classList.remove('fever'); div.querySelector('div').style.opacity = 0; }, 5000 + state.upgrades.antiSleep * 1000); } };
         }
 
         function spawnConveyorItem() {
@@ -820,7 +818,7 @@
                     let base = STAFF_INFO[id].basePower * state.staff[id];
                     let visuals = activeStaff.filter(v => v.id === id);
                     if (visuals.length > 0) {
-                        let mult = visuals.reduce((sum, v) => sum + (v.state === 'sleeping' ? 0 : (v.state === 'fever' ? 5 : 1)), 0) / visuals.length;
+                        let mult = visuals.reduce((sum, v) => sum + (v.state === 'fever' ? 5 : 1), 0) / visuals.length;
                         base *= mult;
                     }
                     actualAuto += base;
@@ -829,16 +827,6 @@
                 if (income > 0) { state.money += income / 10; state.totalMoney += income / 10; updateUI(); }
                 if (Date.now() - lastSpawnTime >= 3000) { spawnConveyorItem(); lastSpawnTime = Date.now(); }
             }, 100);
-            setInterval(() => {
-                activeStaff.forEach(s => {
-                    if (s.state === 'normal') {
-                        if (Math.random() < (0.05 - state.upgrades.antiSleep * 0.005)) {
-                            s.state = 'sleeping'; s.el.classList.add('sleeping');
-                            s.el.querySelector('div').innerText = '💤'; s.el.querySelector('div').style.opacity = 1;
-                        }
-                    }
-                });
-            }, 5000);
             setInterval(saveGame, 10000);
         };
 
