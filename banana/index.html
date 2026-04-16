@@ -178,6 +178,23 @@
             cursor: not-allowed;
         }
 
+        .golden-banana {
+            position: fixed;
+            font-size: 60px;
+            cursor: pointer;
+            z-index: 5000;
+            animation: float-golden 10s linear forwards, glow-golden 1.5s infinite alternate;
+            pointer-events: auto;
+        }
+        @keyframes float-golden {
+            0% { transform: translate(-100px, 100vh) rotate(0deg); }
+            100% { transform: translate(110vw, -100px) rotate(360deg); }
+        }
+        @keyframes glow-golden {
+            0% { filter: drop-shadow(0 0 10px #FFD700) brightness(1); }
+            100% { filter: drop-shadow(0 0 30px #FFF) brightness(1.5); }
+        }
+
         @keyframes click-pop {
             0% { transform: scale(1); }
             50% { transform: scale(0.95); }
@@ -345,6 +362,8 @@
                         class="flex-1 py-3 text-[9px] lg:text-[10px] font-black border-r border-gray-800 hover:bg-gray-800 transition-colors">BUFS</button>
                     <button id="tab-btn-achievements" onclick="switchTab('achievements')"
                         class="flex-1 py-3 text-[9px] lg:text-[10px] font-black border-r border-gray-800 hover:bg-gray-800 transition-colors text-yellow-500">ACHV</button>
+                    <button id="tab-btn-lore" onclick="switchTab('lore')"
+                        class="flex-1 py-3 text-[9px] lg:text-[10px] font-black border-r border-gray-800 hover:bg-gray-800 transition-colors text-blue-400">LORE</button>
                     <button id="tab-btn-prestige" onclick="switchTab('prestige')"
                         class="flex-1 py-3 text-[9px] lg:text-[10px] font-black text-purple-400 hover:bg-purple-900 transition-colors hidden text-[8px]">SOUL</button>
                 </div>
@@ -375,6 +394,7 @@
                         </div>
                         <div id="achievements-list" class="space-y-2"></div>
                     </div>
+                    <div id="pane-lore" class="hidden space-y-2"></div>
                     <div id="pane-prestige" class="hidden space-y-4">
                         <div class="bg-purple-900/30 border-2 border-purple-500 p-4 rounded-2xl text-center">
                             <h3 class="text-sm font-black text-purple-400 mb-2 uppercase tracking-tighter">Banana
@@ -468,7 +488,17 @@
             { id: "s7", name: "黄金バナナ", icon: "✨", power: 30000, cost: 5000000 },
             { id: "s8", name: "バナナ惑星", icon: "🪐", power: 250000, cost: 50000000 },
             { id: "s9", name: "バナナ銀河", icon: "🌀", power: 2000000, cost: 1000000000 },
-            { id: "s10", name: "バナナ宇宙", icon: "🌌", power: 150000000, cost: 50000000000 }
+            { id: "s10", name: "バナナ宇宙", icon: "🌌", power: 150000000, cost: 50000000000 },
+            { id: "s11", name: "覚醒・芽生えバナナ", icon: "🌱⚡", power: 1000000000, cost: 500000000000 },
+            { id: "s12", name: "覚醒・普通のバナナ", icon: "🍌⚡", power: 8000000000, cost: 5000000000000 },
+            { id: "s13", name: "覚醒・完熟バナナ", icon: "🍌⚡", power: 60000000000, cost: 50000000000000 },
+            { id: "s14", name: "覚醒・バナナの房", icon: "🍌⚡", power: 500000000000, cost: 500000000000000 },
+            { id: "s15", name: "覚醒・バナナの箱", icon: "📦⚡", power: 4000000000000, cost: 5000000000000000 },
+            { id: "s16", name: "覚醒・巨大バナナ", icon: "🍌⚡", power: 30000000000000, cost: 50000000000000000 },
+            { id: "s17", name: "覚醒・黄金バナナ", icon: "✨⚡", power: 200000000000000, cost: 500000000000000000 },
+            { id: "s18", name: "覚醒・バナナ惑星", icon: "🪐⚡", power: 1500000000000000, cost: 5000000000000000000 },
+            { id: "s19", name: "覚醒・バナナ銀河", icon: "🌀⚡", power: 10000000000000000, cost: 50000000000000000000 },
+            { id: "s20", name: "覚醒・バナナ宇宙", icon: "🌌⚡", power: 50000000000000000, cost: 500000000000000000000 }
         ];
 
         const STAFF_INFO = {
@@ -490,11 +520,11 @@
         };
 
         const UPGRADES_INFO = {
-            clickPower: { id: "clickPower", name: "握力トレ", desc: "クリック力+10%", baseCost: 1000, max: 100 },
-            staffPower: { id: "staffPower", name: "バナナ研修", desc: "自動収益+10%", baseCost: 2000, max: 100 },
-            critChance: { id: "critChance", name: "急所見極め", desc: "クリティカル率+1%", baseCost: 5000, max: 50 },
-            critDamage: { id: "critDamage", name: "バナナ一閃", desc: "クリティカル威力+50%", baseCost: 10000, max: 50 },
-            rareRate: { id: "rareRate", name: "黄金の風", desc: "レア出現率UP", baseCost: 50000, max: 20 }
+            clickPower: { id: "clickPower", name: "握力トレ", desc: "クリック力+10%", baseCost: 1000, max: 200 },
+            staffPower: { id: "staffPower", name: "バナナ研修", desc: "自動収益+10%", baseCost: 2000, max: 200 },
+            critChance: { id: "critChance", name: "急所見極め", desc: "クリティカル率+1%", baseCost: 5000, max: 100 },
+            critDamage: { id: "critDamage", name: "バナナ一閃", desc: "クリティカル威力+50%", baseCost: 10000, max: 100 },
+            rareRate: { id: "rareRate", name: "黄金の風", desc: "レア出現率UP", baseCost: 50000, max: 50 }
         };
 
         const PRESTIGE_UPGRADES = {
@@ -507,7 +537,7 @@
             wraith: { id: "wraith", name: "バナナ霊", icon: "👻", basePower: 200000, baseCost: 10, color: "#e2e8f0" },
             angel: { id: "angel", name: "バナナ天使", icon: "👼", basePower: 1000000, baseCost: 50, color: "#fef3c7" },
             reaper: { id: "reaper", name: "バナナ死神", icon: "💀", basePower: 5000000, baseCost: 200, color: "#1e293b" },
-            taataru: { id: "taataru", name: "たあたる", icon: "👑🔥🔋", basePower: 10000000000000, baseCost: 10000000000, color: "#fbbf24" }
+            taataru: { id: "taataru", name: "たあたる", icon: "👑🔥🔋", basePower: 10000000000000000, baseCost: 10000000000, color: "#fbbf24" }
         };
 
         // --- Game State ---
@@ -524,7 +554,9 @@
             isSingularity: false,
             prestigeUnlocked: false,
             realPurchases: 0,
-            unlockedAchievements: []
+            unlockedAchievements: [],
+            realMonkeyLevel: 0,
+            lastSaveTime: Date.now()
         };
 
         let activeStaff = [];
@@ -533,6 +565,8 @@
         let lastSpawnTime = 0;
         let cachedClickPower = 1;
         let cachedAutoPower = 0;
+        let isFever = false;
+        let feverMultiplier = 1;
 
         // --- Audio System ---
         const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -591,14 +625,28 @@
             return { amount, cost };
         }
 
+        function getSynergyMult() {
+            let mult = 1;
+            if (state.staff.farmer >= 100 && state.staff.harvester >= 100) mult *= 1.5;
+            if (state.staff.awakened_monkey > 0 && state.staff.awakened_farmer > 0 && state.staff.awakened_harvester > 0 && state.staff.awakened_manager > 0 && state.staff.awakened_god > 0) mult *= 3;
+            return mult;
+        }
+
         function calculatePowers() {
             let mult = 1 + (state.prestige.globalMult * 0.5);
             let baseClick = SHOPS[state.shopIdx].power + (state.prestige.clickBoost * 100);
             cachedClickPower = baseClick * (1 + (state.upgrades.clickPower * 0.1)) * mult;
             let baseAuto = 0;
-            for (let id in STAFF_INFO) baseAuto += STAFF_INFO[id].basePower * state.staff[id];
+            let monkeyBoost = 1 + (state.realMonkeyLevel || 0) * 1;
+            for (let id in STAFF_INFO) {
+                let power = STAFF_INFO[id].basePower;
+                if (id === 'monkey' || id === 'awakened_monkey' || id === 'super_awakened_monkey') {
+                    power *= monkeyBoost;
+                }
+                baseAuto += power * state.staff[id];
+            }
             for (let id in PRESTIGE_STAFF_INFO) baseAuto += PRESTIGE_STAFF_INFO[id].basePower * state.prestigeStaff[id];
-            cachedAutoPower = baseAuto * (1 + (state.upgrades.staffPower * 0.1)) * mult;
+            cachedAutoPower = baseAuto * (1 + (state.upgrades.staffPower * 0.1)) * mult * getSynergyMult();
         }
 
         function saveGame() { localStorage.setItem('bananaAdvancedSave', JSON.stringify(state)); }
@@ -628,13 +676,31 @@
                 if (!state.staff.super_awakened_manager) state.staff.super_awakened_manager = 0;
                 if (!state.staff.super_awakened_god) state.staff.super_awakened_god = 0;
                 if (!state.prestigeStaff.taataru) state.prestigeStaff.taataru = 0;
+                if (typeof state.realMonkeyLevel === 'undefined') state.realMonkeyLevel = 0;
+                
+                if (state.lastSaveTime) {
+                    let diffMs = Date.now() - state.lastSaveTime;
+                    let diffSec = Math.floor(diffMs / 1000);
+                    diffSec = Math.min(diffSec, 43200); // Max 12 hours
+                    if (diffSec > 60) {
+                        setTimeout(() => {
+                            let offlineEarn = cachedAutoPower * diffSec * 0.5;
+                            if (offlineEarn > 0) {
+                                state.money += offlineEarn;
+                                state.totalMoney += offlineEarn;
+                                alert(`オフライン収益!\n${diffSec}秒の間に ${formatMoney(offlineEarn)} 🍌 を獲得しました！`);
+                                updateFastUI();
+                            }
+                        }, 1000);
+                    }
+                }
             }
         }
 
         // --- UI Rendering ---
         function switchTab(tabId) {
             currentTab = tabId;
-            ['shop', 'staff', 'upgrade', 'prestige', 'achievements'].forEach(t => {
+            ['shop', 'staff', 'upgrade', 'prestige', 'achievements', 'lore'].forEach(t => {
                 const btn = document.getElementById(`tab-btn-${t}`);
                 const pane = document.getElementById(`pane-${t}`);
                 if (btn) btn.classList.toggle('tab-active', t === tabId);
@@ -722,6 +788,7 @@
             if (currentTab === 'upgrade') renderUpgrade();
             if (currentTab === 'prestige') renderPrestige();
             if (currentTab === 'achievements') renderAchievements();
+            if (currentTab === 'lore') renderLore();
         }
 
         function renderShop() {
@@ -744,7 +811,11 @@
                 if (buyMode === 'MAX') { let res = getMaxAffordable(info.baseCost, level, state.money); amt = res.amount; cost = res.cost; }
                 else cost = getCost(info.baseCost, level, amt);
                 if (amt === 0 && buyMode === 'MAX') { amt = 1; cost = getCost(info.baseCost, level, 1); }
-                pane.innerHTML += createCardHTML(`${info.name} (Lv.${level})`, `BPS: +${formatMoney(info.basePower * (amt || 1))}`, formatMoney(cost), `buyStaff('${id}')`, state.money < cost || amt === 0, `<div class="w-10 h-10 rounded-lg flex items-center justify-center text-2xl border border-black shadow-inner" style="background:${info.color}">${info.icon}</div>`, cost);
+                let displayPwr = info.basePower;
+                if (id === 'monkey' || id === 'awakened_monkey' || id === 'super_awakened_monkey') {
+                    displayPwr *= (1 + (state.realMonkeyLevel || 0) * 1);
+                }
+                pane.innerHTML += createCardHTML(`${info.name} (Lv.${level})`, `BPS: +${formatMoney(displayPwr * (amt || 1))}`, formatMoney(cost), `buyStaff('${id}')`, state.money < cost || amt === 0, `<div class="w-10 h-10 rounded-lg flex items-center justify-center text-2xl border border-black shadow-inner" style="background:${info.color}">${info.icon}</div>`, cost);
             }
         }
         function renderUpgrade() {
@@ -758,6 +829,14 @@
                 if (amt === 0) { amt = 1; cost = getCost(info.baseCost, level, 1, 1.3); }
                 pane.innerHTML += createCardHTML(`${info.name} (${level}/${info.max})`, info.desc, formatMoney(cost), `buyUpgrade('${id}')`, state.money < cost || amt === 0, `<div class="text-2xl w-10 text-center">📈</div>`, cost);
             }
+            // Synergy Display
+            pane.innerHTML += `
+                <div class="mt-4 border-t-2 border-gray-700 pt-2">
+                    <div class="text-[10px] font-black text-blue-400 uppercase text-center mb-2">Active Synergies</div>
+                    ${state.staff.farmer >= 100 && state.staff.harvester >= 100 ? `<div class="text-xs text-green-300">🌿 現代農業コンボ発動中！ (自動収益 x1.5)</div>` : `<div class="text-[9px] text-gray-600 border border-gray-700 p-1 rounded">??? (農園主と収穫機を100体集めよ)</div>`}
+                    ${state.staff.awakened_monkey > 0 && state.staff.awakened_farmer > 0 && state.staff.awakened_harvester > 0 && state.staff.awakened_manager > 0 && state.staff.awakened_god > 0 ? `<div class="text-xs text-purple-300 mt-1">🔥 覚醒の共鳴発動中！ (自動収益 x3.0)</div>` : `<div class="text-[9px] text-gray-600 border border-gray-700 p-1 rounded mt-1">??? (基本の覚醒5種を集めよ)</div>`}
+                </div>
+            `;
         }
 
         function renderAchievements() {
@@ -805,16 +884,26 @@
             for (let id in PRESTIGE_STAFF_INFO) {
                 const info = PRESTIGE_STAFF_INFO[id];
                 const level = state.prestigeStaff[id];
-                const cost = info.baseCost;
+                
+                let amt = buyMode;
+                let cost = 0;
+                if (buyMode === 'MAX') {
+                    amt = Math.min(100, Math.floor(state.souls / info.baseCost));
+                    cost = amt * info.baseCost;
+                } else {
+                    cost = info.baseCost * amt;
+                }
+                if (amt === 0 && buyMode === 'MAX') { amt = 1; cost = info.baseCost; }
+
                 staffList.innerHTML += `
                     <div class="bg-gray-800 p-3 rounded-2xl border border-purple-700 flex gap-3 items-center">
                         <div class="w-10 h-10 rounded-lg flex items-center justify-center text-2xl border border-purple-500 shadow-inner bg-purple-900/50">${info.icon}</div>
                         <div class="flex-1 min-w-0">
                             <div class="font-black text-[10px] truncate uppercase text-purple-300">${info.name} (Lv.${level})</div>
-                            <div class="text-[9px] text-gray-400 truncate opacity-70">BPS: +${formatMoney(info.basePower)}</div>
+                            <div class="text-[9px] text-gray-400 truncate opacity-70">BPS: +${formatMoney(info.basePower * (amt || 1))}</div>
                             <div class="font-black text-purple-400 text-xs mt-1">✨ ${cost} SOULS</div>
                         </div>
-                        <button onclick="buyPrestigeStaff('${id}')" data-cost="${cost}" class="buy-btn-ref px-3 py-1 rounded-lg font-black transition-all text-[10px] ${state.souls < cost ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-500 text-white shadow-[0_2px_0_#4c1d95] active:translate-y-0.5 active:shadow-none'}" ${state.souls < cost ? 'disabled' : ''}>HIRE</button>
+                        <button onclick="buyPrestigeStaff('${id}')" data-cost="${cost}" class="buy-btn-ref px-3 py-1 rounded-lg font-black transition-all text-[10px] ${state.souls < cost || amt === 0 ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-500 text-white shadow-[0_2px_0_#4c1d95] active:translate-y-0.5 active:shadow-none'}" ${state.souls < cost || amt === 0 ? 'disabled' : ''}>HIRE</button>
                     </div>
                 `;
             }
@@ -823,7 +912,23 @@
             for (let id in PRESTIGE_UPGRADES) {
                 const info = PRESTIGE_UPGRADES[id];
                 const level = state.prestige[id];
-                const cost = Math.floor(info.costStart * Math.pow(info.costScale, level));
+                
+                let amt = buyMode;
+                let cost = 0;
+                if (buyMode === 'MAX') {
+                    amt = 0; cost = 0;
+                    while(true) {
+                        let nextCost = Math.floor(info.costStart * Math.pow(info.costScale, level + amt));
+                        if (cost + nextCost > state.souls || amt >= 100) break;
+                        cost += nextCost; amt++;
+                    }
+                } else {
+                    for(let i = 0; i < amt; i++) {
+                        cost += Math.floor(info.costStart * Math.pow(info.costScale, level + i));
+                    }
+                }
+                if (amt === 0 && buyMode === 'MAX') { amt = 1; cost = Math.floor(info.costStart * Math.pow(info.costScale, level)); }
+
                 upgradesList.innerHTML += `
                     <div class="bg-gray-800 p-3 rounded-2xl border border-gray-700 flex gap-3 items-center">
                         <div class="text-2xl w-10 text-center">✨</div>
@@ -832,7 +937,7 @@
                             <div class="text-[9px] text-gray-400 truncate opacity-70">${info.desc}</div>
                             <div class="font-black text-purple-400 text-xs mt-1">✨ ${cost} SOULS</div>
                         </div>
-                        <button onclick="buyPrestigeUpgrade('${id}')" data-cost="${cost}" class="buy-btn-ref px-3 py-1 rounded-lg font-black transition-all text-[10px] ${state.souls < cost ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-500 text-white shadow-[0_2px_0_#4c1d95] active:translate-y-0.5 active:shadow-none'}" ${state.souls < cost ? 'disabled' : ''}>UPGRD</button>
+                        <button onclick="buyPrestigeUpgrade('${id}')" data-cost="${cost}" class="buy-btn-ref px-3 py-1 rounded-lg font-black transition-all text-[10px] ${state.souls < cost || amt === 0 ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-500 text-white shadow-[0_2px_0_#4c1d95] active:translate-y-0.5 active:shadow-none'}" ${state.souls < cost || amt === 0 ? 'disabled' : ''}>UPGRD</button>
                     </div>
                 `;
             }
@@ -841,6 +946,7 @@
         function clickBanana(e) {
             initAudio(); let isCrit = Math.random() < (0.05 + state.upgrades.critChance * 0.01);
             let pwr = cachedClickPower * (isCrit ? (10 + state.upgrades.critDamage * 0.5) : 1);
+            pwr *= feverMultiplier;
             if (isCrit) { playSound('critical'); spawnCritText(e.clientX, e.clientY); shakeScreen(); }
             else playSound('click');
             state.money += pwr; state.totalMoney += pwr; state.lifetimeMoney += pwr;
@@ -863,18 +969,46 @@
             if (amt > 0 && state.money >= cost) { state.money -= cost; state.upgrades[id] += amt; playSound('buy'); calculatePowers(); updateFastUI(); updateTabUI(); }
         }
         function buyPrestigeUpgrade(id) {
-            let info = PRESTIGE_UPGRADES[id]; let level = state.prestige[id]; let cost = Math.floor(info.costStart * Math.pow(info.costScale, level));
-            if (state.souls >= cost) { state.souls -= cost; state.prestige[id]++; playSound('buy'); calculatePowers(); updateFastUI(); updateTabUI(); }
+            let info = PRESTIGE_UPGRADES[id]; let level = state.prestige[id];
+            
+            let amt = buyMode;
+            let cost = 0;
+            if (buyMode === 'MAX') {
+                amt = 0; cost = 0;
+                while(true) {
+                    let nextCost = Math.floor(info.costStart * Math.pow(info.costScale, level + amt));
+                    if (cost + nextCost > state.souls || amt >= 100) break;
+                    cost += nextCost; amt++;
+                }
+            } else {
+                for(let i = 0; i < amt; i++) {
+                    cost += Math.floor(info.costStart * Math.pow(info.costScale, level + i));
+                }
+            }
+
+            if (amt > 0 && state.souls >= cost) { state.souls -= cost; state.prestige[id] += amt; playSound('buy'); calculatePowers(); updateFastUI(); updateTabUI(); }
         }
 
         function buyPrestigeStaff(id) {
             let info = PRESTIGE_STAFF_INFO[id];
-            let cost = info.baseCost;
-            if (state.souls >= cost) {
+            
+            let amt = buyMode;
+            let cost = 0;
+            if (buyMode === 'MAX') {
+                amt = Math.min(100, Math.floor(state.souls / info.baseCost));
+                cost = amt * info.baseCost;
+            } else {
+                cost = info.baseCost * amt;
+            }
+
+            if (amt > 0 && state.souls >= cost) {
                 state.souls -= cost;
-                state.prestigeStaff[id]++;
+                state.prestigeStaff[id] += amt;
                 playSound('buy');
-                if (state.prestigeStaff[id] === 1 || state.prestigeStaff[id] % 5 === 0) addStaffVisual(id);
+                for(let i=0; i<amt; i++) {
+                    let currentLevel = state.prestigeStaff[id] - amt + i + 1;
+                    if (currentLevel === 1 || currentLevel % 5 === 0) addStaffVisual(id);
+                }
                 calculatePowers();
                 updateFastUI();
                 updateTabUI();
@@ -894,13 +1028,23 @@
         }
 
         function spawnConveyorItem() {
-            const item = document.createElement('div'); item.className = 'convey-item text-4xl cursor-pointer select-none';
-            let isRare = Math.random() < (0.02 + state.upgrades.rareRate * 0.01);
-            if (isRare) { item.innerText = '🎁'; item.classList.add('animate-pulse'); item.style.filter = 'drop-shadow(0 0 10px #fbbf24)'; item.onclick = (e) => { collectRare(e); item.remove(); }; }
+            const item = document.createElement('div'); item.className = 'convey-item text-4xl cursor-pointer select-none pointer-events-auto';
+            let r = Math.random();
+            if (r < (0.02 + state.upgrades.rareRate * 0.01)) { item.innerText = '🎁'; item.classList.add('animate-pulse'); item.style.filter = 'drop-shadow(0 0 10px #fbbf24)'; item.onclick = (e) => { collectRare(e); item.remove(); }; }
+            else if (r < 0.1) { item.innerText = '🤢'; item.onclick = (e) => { collectTrash(e, true); item.remove(); }; }
+            else if (r < 0.15) { item.innerText = '🍎'; item.onclick = (e) => { collectTrash(e, false); item.remove(); }; }
             else { item.innerText = SHOPS[state.shopIdx].icon; item.classList.add('opacity-40', 'pointer-events-none'); }
             document.getElementById('conveyor').appendChild(item); setTimeout(() => item.remove(), 8000);
         }
-        function collectRare(e) { initAudio(); playSound('rare'); let reward = Math.max(100, cachedAutoPower * 30); state.money += reward; spawnCritText(e.clientX, e.clientY, `+${formatMoney(reward)}!`); updateFastUI(); }
+        function collectTrash(e, isRotten) {
+            initAudio(); playSound('click');
+            let reward = cachedAutoPower * (isRotten ? 10 : 50); // 10 sec or 50 sec worth
+            reward = Math.max(10, reward);
+            state.money += reward; state.totalMoney += reward;
+            spawnCritText(e.clientX, e.clientY, `仕分け! +${formatMoney(reward)}`);
+            updateFastUI();
+        }
+        function collectRare(e) { initAudio(); playSound('rare'); let reward = Math.max(100, cachedAutoPower * 30); state.money += reward; state.totalMoney += reward; spawnCritText(e.clientX, e.clientY, `+${formatMoney(reward)}!`); updateFastUI(); }
 
         function spawnCritText(x, y, txt = 'CRITICAL!!') {
             const t = document.createElement('div'); t.className = 'critical-text'; t.innerText = txt; t.style.left = (x - 60) + 'px'; t.style.top = (y - 60) + 'px'; document.body.appendChild(t); setTimeout(() => t.remove(), 600);
@@ -941,6 +1085,7 @@
 
             state.money -= cost;
             state.realPurchases = (state.realPurchases || 0) + 1;
+            state.realMonkeyLevel = (state.realMonkeyLevel || 0) + 1;
             
             let firstTime = false;
             if (!state.unlockedAchievements.includes(banana.origin)) {
@@ -956,11 +1101,11 @@
             toast.className = 'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/90 backdrop-blur border-4 border-yellow-400 p-8 rounded-3xl shadow-2xl z-[3000] flex flex-col items-center gap-4 animate-bounce';
             toast.innerHTML = firstTime ? `
                 <div class="text-6xl text-yellow-500 animate-pulse">🏆</div>
-                <div class="text-2xl font-black text-gray-800">${banana.origin}実績解除！</div>
+                <div class="text-2xl font-black text-gray-800">${banana.origin}実績解除！サルが急成長！</div>
                 <div class="text-xl font-bold text-red-600">消費: -${formatMoney(cost)} 🍌</div>
             ` : `
                 <div class="text-6xl text-gray-500">🛒</div>
-                <div class="text-2xl font-black text-gray-800">${banana.origin}産のバナナを購入！</div>
+                <div class="text-2xl font-black text-gray-800">${banana.origin}産のバナナを購入！<br>サルがさらに育った！</div>
                 <div class="text-xl font-bold text-red-600">消費: -${formatMoney(cost)} 🍌</div>
             `;
             document.body.appendChild(toast);
@@ -976,8 +1121,64 @@
                 setTimeout(() => toast.remove(), 1000);
             }, 2500);
 
+            calculatePowers();
             updateFastUI();
+            updateTabUI();
             saveGame();
+        }
+
+        const LORE_ENTRIES = [
+            { id: "l1", reqId: () => state.totalMoney >= 100, title: "バナナの目覚め", text: "あなたが初めてバナナをクリックした時、世界規模の革命が密かに始まっていた。" },
+            { id: "l2", reqId: () => state.staff.monkey >= 10, title: "サルの使役", text: "彼らは喜んで働いているように見える。しかし、その瞳には深い闇が広がっている。" },
+            { id: "l3", reqId: () => state.shopIdx >= 4, title: "箱買いの恐怖", text: "バナナがダンボールで運ばれてくる。もはや個人消費量をはるかに超えている。" },
+            { id: "l4", reqId: () => state.souls > 0, title: "特異点の観測", text: "黄金の魂を手に入れた。バナナが物理法則を超越し始めたことを証明している。" },
+            { id: "l5", reqId: () => state.realPurchases > 0, title: "世界の果て", text: "現実のバナナを買うことでサルが育つ。次元の境界が曖昧になってきた証拠である。" },
+            { id: "l6", reqId: () => state.prestigeStaff.taataru > 0, title: "超越者たあたる", text: "ついに1京の力をもつ王が降臨した。バナナ宇宙は彼の手の中に収まった。" }
+        ];
+
+        function renderLore() {
+            const pane = document.getElementById('pane-lore');
+            if(!pane) return;
+            pane.innerHTML = `<div class="text-center p-2"><h3 class="text-xs font-black text-blue-400 uppercase tracking-tighter">Banana Lore</h3></div>`;
+            LORE_ENTRIES.forEach((lore, i) => {
+                const unlocked = lore.reqId();
+                pane.innerHTML += `
+                    <div class="bg-gray-800 p-3 rounded-2xl border border-gray-700 shadow-inner">
+                        <div class="font-black text-xs ${unlocked ? 'text-blue-300' : 'text-gray-600'}">#00${i+1}: ${unlocked ? lore.title : '????'}</div>
+                        <div class="text-[10px] mt-1 ${unlocked ? 'text-gray-300' : 'text-gray-700'}">
+                            ${unlocked ? lore.text : '条件を満たしていません...'}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function spawnGoldenBanana() {
+            const gb = document.createElement('div');
+            gb.className = 'golden-banana';
+            gb.innerText = '🍌✨';
+            gb.style.top = Math.random() * 80 + 'vh';
+            gb.onclick = () => {
+                gb.remove();
+                let r = Math.random();
+                if (r < 0.5) {
+                    let earn = cachedAutoPower * 3600;
+                    earn = Math.max(100, earn);
+                    state.money += earn; state.totalMoney += earn;
+                    alert(`黄金のバナナ！\n瞬時に1時間分の収益(${formatMoney(earn)} 🍌)を獲得！`);
+                } else {
+                    isFever = true;
+                    feverMultiplier = 777;
+                    alert(`バナナフィーバー！！\n15秒間、クリック力と自動収益が777倍になります！`);
+                    setTimeout(() => {
+                        isFever = false;
+                        feverMultiplier = 1;
+                    }, 15000);
+                }
+                updateFastUI();
+            };
+            document.body.appendChild(gb);
+            setTimeout(() => gb.remove(), 10000);
         }
 
         // --- Core Loops ---
@@ -989,6 +1190,9 @@
                 let actualAuto = 0;
                 for (let id in STAFF_INFO) {
                     let base = STAFF_INFO[id].basePower * state.staff[id];
+                    if (id === 'monkey' || id === 'awakened_monkey' || id === 'super_awakened_monkey') {
+                        base *= (1 + (state.realMonkeyLevel || 0) * 1);
+                    }
                     let visuals = activeStaff.filter(v => v.id === id);
                     if (visuals.length > 0) {
                         let mult = visuals.reduce((sum, v) => sum + (v.state === 'fever' ? 5 : 1), 0) / visuals.length;
@@ -999,10 +1203,13 @@
                 for (let id in PRESTIGE_STAFF_INFO) {
                     actualAuto += PRESTIGE_STAFF_INFO[id].basePower * state.prestigeStaff[id];
                 }
-                let income = actualAuto * (1 + state.upgrades.staffPower * 0.1) * (1 + state.prestige.globalMult * 0.5);
+                let income = actualAuto * (1 + state.upgrades.staffPower * 0.1) * (1 + state.prestige.globalMult * 0.5) * getSynergyMult() * feverMultiplier;
                 if (income > 0) { state.money += income / 10; state.totalMoney += income / 10; updateFastUI(); }
                 if (Date.now() - lastSpawnTime >=   3000) { spawnConveyorItem(); lastSpawnTime = Date.now(); }
             }, 100);
+            setInterval(() => {
+                if (Math.random() < 0.3) spawnGoldenBanana();
+            }, 60000); // Check every minute
             setInterval(saveGame, 10000);
         };
 
@@ -1062,6 +1269,50 @@
                 price: 250,
                 comment: "やや控えめな甘さ。加熱調理やお菓子作りにも向いている万能型。",
                 color: "bg-purple-100"
+            },
+            {
+                id: 6,
+                origin: "バナナ箱買い（大口取引）",
+                rank: "S",
+                stars: 5,
+                thickness: "測定不能",
+                length: "測定不能",
+                price: 150000,
+                comment: "業者サイズのダンボール買い。部屋中が強烈なバナナの匂いになり、サルが興奮する。",
+                color: "bg-yellow-200"
+            },
+            {
+                id: 7,
+                origin: "バナナ農園（丸ごと買い）",
+                rank: "S",
+                stars: 5,
+                thickness: "土地規模",
+                length: "見渡す限り",
+                price: 50000000,
+                comment: "産地直送を超え、産地そのものを購入。サルたちが自由に走り回れる楽園。",
+                color: "bg-yellow-300"
+            },
+            {
+                id: 8,
+                origin: "バナナ惑星",
+                rank: "S",
+                stars: 5,
+                thickness: "天体的",
+                length: "重力崩壊",
+                price: 100000000000,
+                comment: "地表や海がすべてバナナで覆われた未知の惑星の所有権。サルの知能が宇宙の真理に近付く。",
+                color: "bg-purple-200"
+            },
+            {
+                id: 9,
+                origin: "バナナ銀河",
+                rank: "S",
+                stars: 5,
+                thickness: "光年",
+                length: "宇宙的",
+                price: 100000000000000,
+                comment: "数千億のバナナ太陽系からなる銀河群。もはや食べ物ではなく概念。サルの最終進化を促す。",
+                color: "bg-black text-white"
             }
         ];
 
@@ -1133,6 +1384,9 @@
                             <p class="text-sm leading-relaxed text-gray-600 italic">
                                 "${banana.comment}"
                             </p>
+                            <div class="mt-2 text-center bg-yellow-50 py-1 rounded-lg border border-yellow-200">
+                                <p class="text-sm font-black text-yellow-700">🐒 購入するとサルの生産力+100%！</p>
+                            </div>
                         </div>
 
                         <button onclick="buyRealBanana(${banana.id})" class="w-full mt-4 bg-yellow-400 hover:bg-yellow-300 text-yellow-900 font-black py-3 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2 border-b-4 border-yellow-600 active:border-b-0 active:translate-y-1 shadow-lg">
