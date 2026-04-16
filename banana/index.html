@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>世界バナナ比較図鑑 - Banana World Comparison</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -24,6 +24,7 @@
             font-family: 'Outfit', 'Noto Sans JP', sans-serif;
             background-color: var(--banana-light);
             color: var(--banana-dark);
+            touch-action: manipulation;
         }
 
         .yellow-gradient {
@@ -516,7 +517,22 @@
             super_awakened_farmer: { id: "super_awakened_farmer", name: "超覚醒農園主 (S-Awk Farmer)", icon: "👨‍🌾🌀", basePower: 10000000000, baseCost: 2500000000000, color: "#bfdbfe" },
             super_awakened_harvester: { id: "super_awakened_harvester", name: "超覚醒収穫機 (S-Awk Harvester)", icon: "🚜🌀", basePower: 50000000000, baseCost: 15000000000000, color: "#ddd6fe" },
             super_awakened_manager: { id: "super_awakened_manager", name: "超覚醒マネージャー (S-Awk Manager)", icon: "🕴️🌀", basePower: 250000000000, baseCost: 100000000000000, color: "#fef08a" },
-            super_awakened_god: { id: "super_awakened_god", name: "超覚醒バナナ神 (S-Awk God)", icon: "👁️🌀", basePower: 1500000000000, baseCost: 500000000000000, color: "#f8fafc" }
+            super_awakened_god: { id: "super_awakened_god", name: "超覚醒バナナ神 (S-Awk God)", icon: "👁️🌀", basePower: 1500000000000, baseCost: 500000000000000, color: "#f8fafc" },
+            trained_monkey: { id: "trained_monkey", name: "研修済みサル", icon: "🐒🎓", basePower: 50000000000000, baseCost: 10000000000000000, color: "#fde68a" },
+            trained_farmer: { id: "trained_farmer", name: "研修済み農園主", icon: "👨‍🌾🎓", basePower: 300000000000000, baseCost: 50000000000000000, color: "#bfdbfe" },
+            trained_harvester: { id: "trained_harvester", name: "研修済み収穫機", icon: "🚜🎓", basePower: 2000000000000000, baseCost: 200000000000000000, color: "#ddd6fe" },
+            trained_manager: { id: "trained_manager", name: "研修済みマネージャー", icon: "🕴️🎓", basePower: 10000000000000000, baseCost: 1000000000000000000, color: "#fef08a" },
+            trained_god: { id: "trained_god", name: "研修済みバナナ神", icon: "👁️🎓", basePower: 80000000000000000, baseCost: 5000000000000000000, color: "#f8fafc" },
+            trained_awakened_monkey: { id: "trained_awakened_monkey", name: "研・覚醒サル", icon: "🐒🔥🎓", basePower: 500000000000000000, baseCost: 50000000000000000000, color: "#fde68a" },
+            trained_awakened_farmer: { id: "trained_awakened_farmer", name: "研・覚醒農園主", icon: "👨‍🌾⚡🎓", basePower: 3000000000000000000, baseCost: 200000000000000000000, color: "#bfdbfe" },
+            trained_awakened_harvester: { id: "trained_awakened_harvester", name: "研・覚醒収穫機", icon: "🚜⚡🎓", basePower: 20000000000000000000, baseCost: 1000000000000000000000, color: "#ddd6fe" },
+            trained_awakened_manager: { id: "trained_awakened_manager", name: "研・覚醒マネージャー", icon: "🕴️⚡🎓", basePower: 100000000000000000000, baseCost: 5000000000000000000000, color: "#fef08a" },
+            trained_awakened_god: { id: "trained_awakened_god", name: "研・覚醒バナナ神", icon: "👁️🌟🎓", basePower: 800000000000000000000, baseCost: 50000000000000000000000, color: "#f8fafc" },
+            trained_super_awakened_monkey: { id: "trained_super_awakened_monkey", name: "研・超覚醒サル", icon: "🐒🌀🎓", basePower: 5000000000000000000000, baseCost: 1000000000000000000000000, color: "#fde68a" },
+            trained_super_awakened_farmer: { id: "trained_super_awakened_farmer", name: "研・超覚醒農園主", icon: "👨‍🌾🌀🎓", basePower: 30000000000000000000000, baseCost: 5000000000000000000000000, color: "#bfdbfe" },
+            trained_super_awakened_harvester: { id: "trained_super_awakened_harvester", name: "研・超覚醒収穫機", icon: "🚜🌀🎓", basePower: 200000000000000000000000, baseCost: 20000000000000000000000000, color: "#ddd6fe" },
+            trained_super_awakened_manager: { id: "trained_super_awakened_manager", name: "研・超覚醒マネージャー", icon: "🕴️🌀🎓", basePower: 1000000000000000000000000, baseCost: 100000000000000000000000000, color: "#fef08a" },
+            trained_super_awakened_god: { id: "trained_super_awakened_god", name: "研・超覚醒バナナ神", icon: "👁️🌀🎓", basePower: 8000000000000000000000000, baseCost: 500000000000000000000000000, color: "#f8fafc" }
         };
 
         const UPGRADES_INFO = {
@@ -537,6 +553,7 @@
             wraith: { id: "wraith", name: "バナナ霊", icon: "👻", basePower: 200000, baseCost: 10, color: "#e2e8f0" },
             angel: { id: "angel", name: "バナナ天使", icon: "👼", basePower: 1000000, baseCost: 50, color: "#fef3c7" },
             reaper: { id: "reaper", name: "バナナ死神", icon: "💀", basePower: 5000000, baseCost: 200, color: "#1e293b" },
+            banana_ai: { id: "banana_ai", name: "bananaAI", icon: "🤖", basePower: 50000000000, baseCost: 50000, color: "#c084fc" },
             taataru: { id: "taataru", name: "たあたる", icon: "👑🔥🔋", basePower: 10000000000000000, baseCost: 10000000000, color: "#fbbf24" }
         };
 
@@ -548,7 +565,7 @@
             souls: 0,
             shopIdx: 0,
             staff: { monkey: 0, farmer: 0, harvester: 0, manager: 0, god: 0 },
-            prestigeStaff: { wraith: 0, angel: 0, reaper: 0 },
+            prestigeStaff: { wraith: 0, angel: 0, reaper: 0, banana_ai: 0, taataru: 0 },
             upgrades: { clickPower: 0, staffPower: 0, critChance: 0, critDamage: 0, rareRate: 0 },
             prestige: { globalMult: 0, startMoney: 0, clickBoost: 0 },
             isSingularity: false,
@@ -606,7 +623,9 @@
             if (num < 10000) return Math.floor(num).toLocaleString();
             if (num < 100000000) return (num / 10000).toFixed(2) + "万";
             if (num < 1000000000000) return (num / 100000000).toFixed(2) + "億";
-            return (num / 1000000000000).toFixed(2) + "兆";
+            if (num < 10000000000000000) return (num / 1000000000000).toFixed(2) + "兆";
+            if (num < 100000000000000000000) return (num / 10000000000000000).toFixed(2) + "京";
+            return (num / 100000000000000000000).toFixed(2) + "垓";
         }
 
         function getCost(baseCost, level, amount, scaling = 1.15) {
@@ -640,7 +659,7 @@
             let monkeyBoost = 1 + (state.realMonkeyLevel || 0) * 1;
             for (let id in STAFF_INFO) {
                 let power = STAFF_INFO[id].basePower;
-                if (id === 'monkey' || id === 'awakened_monkey' || id === 'super_awakened_monkey') {
+                if (id.includes('monkey')) {
                     power *= monkeyBoost;
                 }
                 baseAuto += power * state.staff[id];
@@ -656,7 +675,8 @@
                 const data = JSON.parse(saved);
                 Object.assign(state, data);
                 // Ensure prestigeStaff and new staff exist for older saves
-                if (!state.prestigeStaff) state.prestigeStaff = { wraith: 0, angel: 0, reaper: 0 };
+                if (!state.prestigeStaff) state.prestigeStaff = { wraith: 0, angel: 0, reaper: 0, banana_ai: 0, taataru: 0 };
+                else if (typeof state.prestigeStaff.banana_ai === 'undefined') state.prestigeStaff.banana_ai = 0;
                 if (state.prestigeUnlocked || state.souls > 0) {
                     state.prestigeUnlocked = true;
                     document.getElementById('tab-btn-prestige').classList.remove('hidden');
@@ -675,6 +695,14 @@
                 if (!state.staff.super_awakened_harvester) state.staff.super_awakened_harvester = 0;
                 if (!state.staff.super_awakened_manager) state.staff.super_awakened_manager = 0;
                 if (!state.staff.super_awakened_god) state.staff.super_awakened_god = 0;
+                
+                const newStaffKeys = ['trained_monkey', 'trained_farmer', 'trained_harvester', 'trained_manager', 'trained_god',
+                                      'trained_awakened_monkey', 'trained_awakened_farmer', 'trained_awakened_harvester', 'trained_awakened_manager', 'trained_awakened_god',
+                                      'trained_super_awakened_monkey', 'trained_super_awakened_farmer', 'trained_super_awakened_harvester', 'trained_super_awakened_manager', 'trained_super_awakened_god'];
+                newStaffKeys.forEach(key => {
+                    if (typeof state.staff[key] === 'undefined') state.staff[key] = 0;
+                });
+
                 if (!state.prestigeStaff.taataru) state.prestigeStaff.taataru = 0;
                 if (typeof state.realMonkeyLevel === 'undefined') state.realMonkeyLevel = 0;
                 
@@ -812,7 +840,7 @@
                 else cost = getCost(info.baseCost, level, amt);
                 if (amt === 0 && buyMode === 'MAX') { amt = 1; cost = getCost(info.baseCost, level, 1); }
                 let displayPwr = info.basePower;
-                if (id === 'monkey' || id === 'awakened_monkey' || id === 'super_awakened_monkey') {
+                if (id.includes('monkey')) {
                     displayPwr *= (1 + (state.realMonkeyLevel || 0) * 1);
                 }
                 pane.innerHTML += createCardHTML(`${info.name} (Lv.${level})`, `BPS: +${formatMoney(displayPwr * (amt || 1))}`, formatMoney(cost), `buyStaff('${id}')`, state.money < cost || amt === 0, `<div class="w-10 h-10 rounded-lg flex items-center justify-center text-2xl border border-black shadow-inner" style="background:${info.color}">${info.icon}</div>`, cost);
@@ -1077,7 +1105,7 @@
             const banana = bananaData.find(b => b.id === id);
             if (!banana) return;
 
-            const cost = banana.price * 10; // 10x multiplier in banana currency
+            const cost = banana.price; // direct banana cost
             if (state.money < cost) {
                 alert("お金が足りません！ (必要: " + formatMoney(cost) + " 🍌)");
                 return;
@@ -1124,6 +1152,8 @@
             calculatePowers();
             updateFastUI();
             updateTabUI();
+            renderTierList();
+            renderComparisonCards();
             saveGame();
         }
 
@@ -1190,7 +1220,7 @@
                 let actualAuto = 0;
                 for (let id in STAFF_INFO) {
                     let base = STAFF_INFO[id].basePower * state.staff[id];
-                    if (id === 'monkey' || id === 'awakened_monkey' || id === 'super_awakened_monkey') {
+                    if (id.includes('monkey')) {
                         base *= (1 + (state.realMonkeyLevel || 0) * 1);
                     }
                     let visuals = activeStaff.filter(v => v.id === id);
@@ -1222,7 +1252,7 @@
                 stars: 5,
                 thickness: "4.5",
                 length: "12",
-                price: 800,
+                price: 5000000,
                 comment: "驚きのクリーミーさと濃厚な甘み。希少価値が高くフルーティーな香りが特徴。",
                 color: "bg-red-100"
             },
@@ -1233,7 +1263,7 @@
                 stars: 5,
                 thickness: "4.0",
                 length: "15",
-                price: 450,
+                price: 500000,
                 comment: "「バナナの王様」と呼ばれる。モチモチとした食感と絶妙な酸味のバランス。",
                 color: "bg-orange-100"
             },
@@ -1244,7 +1274,7 @@
                 stars: 4,
                 thickness: "3.8",
                 length: "20",
-                price: 300,
+                price: 50000,
                 comment: "大型で食べ応え抜群。安定した品質と深いコクが人気の理由。",
                 color: "bg-blue-100"
             },
@@ -1255,7 +1285,7 @@
                 stars: 3,
                 thickness: "3.5",
                 length: "18",
-                price: 150,
+                price: 500,
                 comment: "日本で最も身近なバナナ。あっさりとした甘さで毎日の朝食に最適。",
                 color: "bg-green-100"
             },
@@ -1266,7 +1296,7 @@
                 stars: 3,
                 thickness: "3.6",
                 length: "17",
-                price: 250,
+                price: 5000,
                 comment: "やや控えめな甘さ。加熱調理やお菓子作りにも向いている万能型。",
                 color: "bg-purple-100"
             },
@@ -1277,7 +1307,7 @@
                 stars: 5,
                 thickness: "測定不能",
                 length: "測定不能",
-                price: 150000,
+                price: 5000000000,
                 comment: "業者サイズのダンボール買い。部屋中が強烈なバナナの匂いになり、サルが興奮する。",
                 color: "bg-yellow-200"
             },
@@ -1288,7 +1318,7 @@
                 stars: 5,
                 thickness: "土地規模",
                 length: "見渡す限り",
-                price: 50000000,
+                price: 50000000000000,
                 comment: "産地直送を超え、産地そのものを購入。サルたちが自由に走り回れる楽園。",
                 color: "bg-yellow-300"
             },
@@ -1299,7 +1329,7 @@
                 stars: 5,
                 thickness: "天体的",
                 length: "重力崩壊",
-                price: 100000000000,
+                price: 500000000000000000,
                 comment: "地表や海がすべてバナナで覆われた未知の惑星の所有権。サルの知能が宇宙の真理に近付く。",
                 color: "bg-purple-200"
             },
@@ -1310,23 +1340,43 @@
                 stars: 5,
                 thickness: "光年",
                 length: "宇宙的",
-                price: 100000000000000,
+                price: 5000000000000000000000,
                 comment: "数千億のバナナ太陽系からなる銀河群。もはや食べ物ではなく概念。サルの最終進化を促す。",
                 color: "bg-black text-white"
+            },
+            {
+                id: 10,
+                origin: "バナナ宇宙の真理",
+                rank: "S",
+                stars: 5,
+                thickness: "次元",
+                length: "無限",
+                price: 1e28,
+                comment: "バナナの概念そのものを解脱し、因果律を書き換える。最終終着点。",
+                color: "bg-purple-900 border-2 border-yellow-500 text-white"
             }
         ];
 
         // 2. Render Functions
         function renderTierList() {
+            document.getElementById('tier-s-content').innerHTML = '';
+            document.getElementById('tier-a-content').innerHTML = '';
+            document.getElementById('tier-b-content').innerHTML = '';
+            document.getElementById('tier-c-content').innerHTML = '';
             bananaData.forEach(banana => {
                 const tierId = `tier-${banana.rank.toLowerCase()}-content`;
                 const tierElement = document.getElementById(tierId);
 
                 const chip = document.createElement('div');
                 chip.className = 'px-4 py-2 bg-yellow-100 border-2 border-yellow-400 rounded-full font-bold shadow-sm flex items-center gap-1 animate-fade-in group relative hover:bg-yellow-200 transition-colors cursor-pointer';
+                const isBought = state.unlockedAchievements.includes(banana.origin);
+                const btnHtml = isBought 
+                    ? `<button class="ml-1 bg-gray-500 text-white text-[9px] px-2 py-0.5 rounded opacity-100 cursor-not-allowed whitespace-nowrap">✅ 済</button>`
+                    : `<button onclick="event.stopPropagation(); buyRealBanana(${banana.id})" class="ml-1 bg-yellow-500 text-white text-[9px] px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">🛒 購入</button>`;
+
                 chip.innerHTML = `
                     <span class="text-xs">🍌</span> ${banana.origin}
-                    <button onclick="event.stopPropagation(); buyRealBanana(${banana.id})" class="ml-1 bg-yellow-500 text-white text-[9px] px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">🛒 購入</button>
+                    ${btnHtml}
                 `;
 
                 tierElement.appendChild(chip);
@@ -1347,7 +1397,7 @@
 
         function renderComparisonCards() {
             const grid = document.getElementById('comparison-grid');
-
+            grid.innerHTML = '';
             bananaData.forEach(banana => {
                 const card = document.createElement('div');
                 card.className = `glass-card rounded-2xl p-6 banana-hover relative overflow-hidden`;
@@ -1376,8 +1426,8 @@
                             <span class="font-bold">${banana.thickness} cm</span>
                         </div>
                         <div class="flex justify-between items-center text-sm border-b border-gray-100 pb-2">
-                            <span class="text-gray-500"><i class="fas fa-tag w-5"></i> 目安価格</span>
-                            <span class="font-bold text-lg text-yellow-700">¥${banana.price} <span class="text-xs font-normal text-gray-400">/房</span></span>
+                            <span class="text-gray-500"><i class="fas fa-tag w-5"></i> ゲーム内解放価格</span>
+                            <span class="font-bold text-lg text-yellow-700">${formatMoney(banana.price)} <span class="text-xs font-normal text-gray-400">🍌</span></span>
                         </div>
                         
                         <div class="mt-4">
@@ -1389,10 +1439,12 @@
                             </div>
                         </div>
 
-                        <button onclick="buyRealBanana(${banana.id})" class="w-full mt-4 bg-yellow-400 hover:bg-yellow-300 text-yellow-900 font-black py-3 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2 border-b-4 border-yellow-600 active:border-b-0 active:translate-y-1 shadow-lg">
+                        ${state.unlockedAchievements.includes(banana.origin) 
+                            ? `<button disabled class="w-full mt-4 bg-gray-400 text-white font-black py-3 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed shadow-none">✅ 購入済み</button>`
+                            : `<button onclick="buyRealBanana(${banana.id})" class="w-full mt-4 bg-yellow-400 hover:bg-yellow-300 text-yellow-900 font-black py-3 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2 border-b-4 border-yellow-600 active:border-b-0 active:translate-y-1 shadow-lg">
                             <i class="fas fa-shopping-cart"></i>
                             今すぐ購入する
-                        </button>
+                        </button>`}
                     </div>
                 `;
 
