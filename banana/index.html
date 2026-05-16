@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>世界バナナ比較図鑑 - Banana World Comparison</title>
+    <title>バナナ王国クリッカー - Banana Kingdom Clicker</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -242,6 +242,51 @@
             background-color: #0f172a;
             color: #f8fafc;
         }
+
+        .kingdom-enemy {
+            position: absolute;
+            width: 76px;
+            min-height: 76px;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            padding: 7px;
+            border-radius: 12px;
+            background: rgba(17, 24, 39, 0.86);
+            border: 2px solid rgba(248, 113, 113, 0.95);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+            cursor: crosshair;
+            pointer-events: auto;
+            user-select: none;
+            transition: filter 0.08s ease, transform 0.08s ease;
+        }
+
+        .kingdom-enemy:hover {
+            filter: brightness(1.2);
+        }
+
+        .kingdom-enemy.hit {
+            transform: translate(-50%, -50%) scale(0.92);
+            filter: brightness(1.8);
+        }
+
+        .enemy-hp {
+            width: 58px;
+            height: 6px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .enemy-hp-fill {
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #f97316, #ef4444);
+            transition: width 0.12s ease;
+        }
     </style>
 </head>
 
@@ -252,11 +297,11 @@
         <div class="max-w-4xl mx-auto">
             <h1 class="text-4xl md:text-5xl font-bold mb-4 flex items-center justify-center gap-3">
                 <i class="fas fa-banana text-black rotate-12"></i>
-                世界バナナ比較図鑑
+                バナナ王国クリッカー
             </h1>
             <p class="text-lg md:text-xl opacity-90 font-medium text-gray-800">
-                各国のバナナを「おいしさ・サイズ・価格」で徹底解剖！<br class="hidden md:inline">
-                あなたにぴったりの1本を見つけよう。
+                バナナを稼ぎ、王国を築き、防壁の向こうから来る襲撃をしのげ。<br class="hidden md:inline">
+                稼いだバナナは、防衛力そのものになる。
             </p>
         </div>
     </header>
@@ -272,7 +317,7 @@
                 id="game-view">
 
                 <!-- Display Bar -->
-                <div class="h-20 bg-gray-900 flex items-center justify-between px-4 lg:px-6 z-50 text-white shrink-0">
+                <div class="min-h-20 bg-gray-900 flex items-center justify-between gap-3 px-4 lg:px-6 py-2 z-50 text-white shrink-0">
                     <div class="flex gap-2 lg:gap-4 flex-wrap">
                         <div
                             class="flex items-center gap-2 bg-gray-800 px-2 lg:px-3 py-1 border-2 border-yellow-600 rounded">
@@ -292,6 +337,36 @@
                                     class="text-[8px] lg:text-[10px] text-gray-400 font-bold uppercase leading-none">BPS</span>
                                 <span class="font-bold text-green-400 leading-tight text-xs lg:text-base"
                                     id="ui-auto">0</span>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center gap-2 bg-gray-800 px-2 lg:px-3 py-1 border-2 border-red-700 rounded">
+                            <span class="text-xl lg:text-2xl">🏰</span>
+                            <div class="flex flex-col">
+                                <span
+                                    class="text-[8px] lg:text-[10px] text-gray-400 font-bold uppercase leading-none">Castle</span>
+                                <span class="font-bold text-red-300 leading-tight text-xs lg:text-base"
+                                    id="ui-castle-hp">100/100</span>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center gap-2 bg-gray-800 px-2 lg:px-3 py-1 border-2 border-slate-600 rounded">
+                            <span class="text-xl lg:text-2xl">🧱</span>
+                            <div class="flex flex-col">
+                                <span
+                                    class="text-[8px] lg:text-[10px] text-gray-400 font-bold uppercase leading-none">Wall</span>
+                                <span class="font-bold text-slate-200 leading-tight text-xs lg:text-base"
+                                    id="ui-wall-hp">60/60</span>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center gap-2 bg-gray-800 px-2 lg:px-3 py-1 border-2 border-orange-600 rounded">
+                            <span class="text-xl lg:text-2xl">⚔️</span>
+                            <div class="flex flex-col">
+                                <span
+                                    class="text-[8px] lg:text-[10px] text-gray-400 font-bold uppercase leading-none">Raid</span>
+                                <span class="font-bold text-orange-300 leading-tight text-xs lg:text-base"
+                                    id="ui-wave-timer">45s</span>
                             </div>
                         </div>
                     </div>
@@ -317,6 +392,14 @@
 
                 <!-- Main Click/Stage Area -->
                 <div class="flex-1 relative flex flex-col justify-center items-center overflow-hidden">
+                    <div id="kingdom-enemy-layer" class="absolute inset-0 z-[45] pointer-events-none"></div>
+                    <div class="absolute left-4 bottom-28 z-20 flex items-end gap-3 pointer-events-none">
+                        <div class="text-6xl drop-shadow-lg">🏰</div>
+                        <div class="text-5xl drop-shadow-lg">🧱</div>
+                    </div>
+                    <div id="kingdom-notice"
+                        class="absolute top-5 left-1/2 -translate-x-1/2 z-50 opacity-0 pointer-events-none transition-all duration-300 bg-gray-950/90 text-white border-2 border-yellow-400 rounded-xl px-4 py-2 text-center shadow-2xl">
+                    </div>
                     <!-- Click Power Label -->
                     <div
                         class="bg-gray-800/80 text-white px-4 py-1 mb-4 text-lg border-2 border-yellow-400 rounded-full shadow-lg z-20">
@@ -361,6 +444,8 @@
                         class="flex-1 py-3 text-[9px] lg:text-[10px] font-black border-r border-gray-800 hover:bg-gray-800 transition-colors">STAFF</button>
                     <button id="tab-btn-upgrade" onclick="switchTab('upgrade')"
                         class="flex-1 py-3 text-[9px] lg:text-[10px] font-black border-r border-gray-800 hover:bg-gray-800 transition-colors">BUFS</button>
+                    <button id="tab-btn-kingdom" onclick="switchTab('kingdom')"
+                        class="flex-1 py-3 text-[9px] lg:text-[10px] font-black border-r border-gray-800 hover:bg-gray-800 transition-colors text-orange-300">KING</button>
                     <button id="tab-btn-achievements" onclick="switchTab('achievements')"
                         class="flex-1 py-3 text-[9px] lg:text-[10px] font-black border-r border-gray-800 hover:bg-gray-800 transition-colors text-yellow-500">ACHV</button>
                     <button id="tab-btn-lore" onclick="switchTab('lore')"
@@ -388,6 +473,7 @@
                     <div id="pane-shop" class="space-y-2"></div>
                     <div id="pane-staff" class="hidden space-y-2"></div>
                     <div id="pane-upgrade" class="hidden space-y-2"></div>
+                    <div id="pane-kingdom" class="hidden space-y-2"></div>
                     <div id="pane-achievements" class="hidden space-y-2">
                         <div class="text-center p-2">
                            <h3 class="text-xs font-black text-yellow-500 uppercase tracking-tighter">Achievement Progress</h3>
@@ -423,7 +509,7 @@
         <section id="tier-section">
             <div class="flex items-center gap-3 mb-8">
                 <div class="h-8 w-2 bg-yellow-500 rounded-full"></div>
-                <h2 class="text-2xl font-bold">総合評価ティア表</h2>
+                <h2 class="text-2xl font-bold">交易バナナティア表</h2>
             </div>
 
             <div class="rounded-2xl overflow-hidden shadow-xl border-4 border-gray-800">
@@ -458,11 +544,11 @@
             </div>
         </section>
 
-        <!-- Detailed Comparison Section -->
+        <!-- Trade Catalog Section -->
         <section id="comparison-section">
             <div class="flex items-center gap-3 mb-8">
                 <div class="h-8 w-2 bg-yellow-500 rounded-full"></div>
-                <h2 class="text-2xl font-bold">詳細データ比較</h2>
+                <h2 class="text-2xl font-bold">交易カタログ詳細</h2>
             </div>
 
             <div id="comparison-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -473,7 +559,7 @@
     </main>
 
     <footer class="bg-gray-800 text-white py-8 text-center">
-        <p class="text-sm opacity-60">© 2026 Banana Comparison Prototype. Stay Healthy!</p>
+        <p class="text-sm opacity-60">© 2026 Banana Kingdom Clicker Demo</p>
     </footer>
 
     <!-- Scripts -->
@@ -536,11 +622,11 @@
         };
 
         const UPGRADES_INFO = {
-            clickPower: { id: "clickPower", name: "握力トレ", desc: "クリック力+10%", baseCost: 1000, max: 200 },
-            staffPower: { id: "staffPower", name: "バナナ研修", desc: "自動収益+10%", baseCost: 2000, max: 200 },
-            critChance: { id: "critChance", name: "急所見極め", desc: "クリティカル率+1%", baseCost: 5000, max: 100 },
-            critDamage: { id: "critDamage", name: "バナナ一閃", desc: "クリティカル威力+50%", baseCost: 10000, max: 100 },
-            rareRate: { id: "rareRate", name: "黄金の風", desc: "レア出現率UP", baseCost: 50000, max: 50 }
+            clickPower: { id: "clickPower", name: "握力トレ", desc: "クリック力+10%", baseCost: 1000, max: 400 },
+            staffPower: { id: "staffPower", name: "バナナ研修", desc: "自動収益+10%", baseCost: 2000, max: 400 },
+            critChance: { id: "critChance", name: "急所見極め", desc: "クリティカル率+0.3%（最大95%）", baseCost: 5000, max: 300 },
+            critDamage: { id: "critDamage", name: "バナナ一閃", desc: "クリティカル威力+50%", baseCost: 10000, max: 300 },
+            rareRate: { id: "rareRate", name: "黄金の風", desc: "レア出現率UP（最大45%）", baseCost: 50000, max: 250 }
         };
 
         const PRESTIGE_UPGRADES = {
@@ -556,6 +642,36 @@
             banana_ai: { id: "banana_ai", name: "bananaAI", icon: "🤖", basePower: 50000000000, baseCost: 50000, color: "#c084fc" },
             taataru: { id: "taataru", name: "たあたる", icon: "👑🔥🔋", basePower: 10000000000000000, baseCost: 10000000000, color: "#fbbf24" }
         };
+
+        const WARRIOR_INFO = {
+            guardian: { id: "guardian", name: "バナナ・ガーディアン", icon: "🛡️🍌", baseCost: 120, costScale: 1.2, attack: 2, guard: 0.05, slot: 1, unlockLab: 0, desc: "防壁ダメージを軽減する盾役" },
+            sniper: { id: "sniper", name: "グリーン・スナイパー", icon: "🎯🍌", baseCost: 450, costScale: 1.22, attack: 12, guard: 0, slot: 1, unlockLab: 1, desc: "硬い青バナナ弾で遠距離攻撃" },
+            berserker: { id: "berserker", name: "バナナ・バーサーカー", icon: "💢🍌", baseCost: 1400, costScale: 1.24, attack: 36, guard: 0, slot: 2, unlockLab: 2, desc: "高火力だが兵舎枠を多く使う" }
+        };
+
+        const KINGDOM_UPGRADE_INFO = {
+            castle: { id: "castle", name: "城の増築", icon: "🏰", baseCost: 1800, costScale: 1.65, lateScale: 1.13, softCap: 12, max: 212, researchCost: 0, desc: "城HP+80。王国が落ちにくくなる" },
+            wall: { id: "wall", name: "防壁の補強", icon: "🧱", baseCost: 700, costScale: 1.55, lateScale: 1.12, softCap: 18, max: 218, researchCost: 0, desc: "防壁HP+55。敵の侵入を止める" },
+            barracks: { id: "barracks", name: "兵舎の拡張", icon: "🏕️", baseCost: 1500, costScale: 1.7, lateScale: 1.14, softCap: 10, max: 210, researchCost: 0, desc: "配置枠+2。戦士を多く雇える" },
+            lab: { id: "lab", name: "バナナ研究所", icon: "🧪", baseCost: 2600, costScale: 2.1, lateScale: 1.18, softCap: 3, max: 203, researchCost: 2, desc: "新しい戦士を解放し、防衛火力+20%" }
+        };
+
+        function createKingdomState() {
+            return {
+                castleHp: 100,
+                castleMaxHp: 100,
+                wallHp: 60,
+                wallMaxHp: 60,
+                wave: 0,
+                nextWaveAt: Date.now() + 45000,
+                waveActive: false,
+                research: 0,
+                enemiesDefeated: 0,
+                lastWaveResult: "王国建設中。最初の襲撃に備えよう。",
+                warriors: { guardian: 0, sniper: 0, berserker: 0 },
+                upgrades: { castle: 0, wall: 0, barracks: 0, lab: 0 }
+            };
+        }
 
         // --- Game State ---
         let state = {
@@ -573,6 +689,7 @@
             realPurchases: 0,
             unlockedAchievements: [],
             realMonkeyLevel: 0,
+            kingdom: createKingdomState(),
             lastSaveTime: Date.now()
         };
 
@@ -584,6 +701,9 @@
         let cachedAutoPower = 0;
         let isFever = false;
         let feverMultiplier = 1;
+        let activeEnemies = [];
+        let enemySeq = 0;
+        let kingdomNoticeTimer = null;
 
         // --- Audio System ---
         const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -668,12 +788,40 @@
             cachedAutoPower = baseAuto * (1 + (state.upgrades.staffPower * 0.1)) * mult * getSynergyMult();
         }
 
-        function saveGame() { localStorage.setItem('bananaAdvancedSave', JSON.stringify(state)); }
+        function ensureKingdomState() {
+            const fresh = createKingdomState();
+            if (!state.kingdom) state.kingdom = fresh;
+            Object.keys(fresh).forEach(key => {
+                if (typeof state.kingdom[key] === 'undefined') state.kingdom[key] = fresh[key];
+            });
+            Object.keys(fresh.warriors).forEach(key => {
+                if (!state.kingdom.warriors) state.kingdom.warriors = {};
+                if (typeof state.kingdom.warriors[key] === 'undefined') state.kingdom.warriors[key] = 0;
+            });
+            Object.keys(fresh.upgrades).forEach(key => {
+                if (!state.kingdom.upgrades) state.kingdom.upgrades = {};
+                if (typeof state.kingdom.upgrades[key] === 'undefined') state.kingdom.upgrades[key] = 0;
+            });
+            state.kingdom.castleMaxHp = 100 + state.kingdom.upgrades.castle * 80;
+            state.kingdom.wallMaxHp = 60 + state.kingdom.upgrades.wall * 55;
+            state.kingdom.castleHp = Math.min(Math.max(1, state.kingdom.castleHp), state.kingdom.castleMaxHp);
+            state.kingdom.wallHp = Math.min(Math.max(0, state.kingdom.wallHp), state.kingdom.wallMaxHp);
+            if (state.kingdom.waveActive) state.kingdom.waveActive = false;
+            if (!state.kingdom.nextWaveAt || state.kingdom.nextWaveAt < Date.now() - 10000) {
+                state.kingdom.nextWaveAt = Date.now() + 30000;
+            }
+        }
+
+        function saveGame() {
+            state.lastSaveTime = Date.now();
+            localStorage.setItem('bananaAdvancedSave', JSON.stringify(state));
+        }
         function loadGame() {
             const saved = localStorage.getItem('bananaAdvancedSave');
             if (saved) {
                 const data = JSON.parse(saved);
                 Object.assign(state, data);
+                ensureKingdomState();
                 // Ensure prestigeStaff and new staff exist for older saves
                 if (!state.prestigeStaff) state.prestigeStaff = { wraith: 0, angel: 0, reaper: 0, banana_ai: 0, taataru: 0 };
                 else if (typeof state.prestigeStaff.banana_ai === 'undefined') state.prestigeStaff.banana_ai = 0;
@@ -723,12 +871,33 @@
                     }
                 }
             }
+            if (!state.staff) state.staff = {};
+            for (let id in STAFF_INFO) {
+                if (typeof state.staff[id] === 'undefined') state.staff[id] = 0;
+            }
+            if (!state.upgrades) state.upgrades = {};
+            for (let id in UPGRADES_INFO) {
+                if (typeof state.upgrades[id] === 'undefined') state.upgrades[id] = 0;
+            }
+            if (!state.prestigeStaff) state.prestigeStaff = {};
+            for (let id in PRESTIGE_STAFF_INFO) {
+                if (typeof state.prestigeStaff[id] === 'undefined') state.prestigeStaff[id] = 0;
+            }
+            if (!state.prestige) state.prestige = {};
+            for (let id in PRESTIGE_UPGRADES) {
+                if (typeof state.prestige[id] === 'undefined') state.prestige[id] = 0;
+            }
+            if (!state.unlockedAchievements) state.unlockedAchievements = [];
+            if (typeof state.realPurchases === 'undefined') state.realPurchases = 0;
+            if (typeof state.realMonkeyLevel === 'undefined') state.realMonkeyLevel = 0;
+            if (typeof state.lifetimeMoney === 'undefined') state.lifetimeMoney = state.totalMoney || 0;
+            ensureKingdomState();
         }
 
         // --- UI Rendering ---
         function switchTab(tabId) {
             currentTab = tabId;
-            ['shop', 'staff', 'upgrade', 'prestige', 'achievements', 'lore'].forEach(t => {
+            ['shop', 'staff', 'upgrade', 'kingdom', 'prestige', 'achievements', 'lore'].forEach(t => {
                 const btn = document.getElementById(`tab-btn-${t}`);
                 const pane = document.getElementById(`pane-${t}`);
                 if (btn) btn.classList.toggle('tab-active', t === tabId);
@@ -772,6 +941,7 @@
             document.getElementById('pending-souls').innerText = Math.floor(Math.pow(state.totalMoney / 100000, 1 / 2.5)) * 2;
 
             document.getElementById('ui-real-purchases').innerText = state.realPurchases || 0;
+            updateKingdomFastUI();
 
             if (!state.prestigeUnlocked && (state.totalMoney >= 100000 || state.souls > 0)) {
                 state.prestigeUnlocked = true;
@@ -794,18 +964,24 @@
             // Real-time button color/state updating (very light)
             const buttons = document.querySelectorAll('.buy-btn-ref');
             buttons.forEach(btn => {
+                if (btn.getAttribute('data-force-disabled') === 'true') return;
                 const cost = parseFloat(btn.getAttribute('data-cost'));
-                const canAfford = state.money >= cost;
+                const currency = btn.getAttribute('data-currency') || 'bananas';
+                const wallet = currency === 'souls' ? state.souls : state.money;
+                const canAfford = wallet >= cost;
                 const isCurrentlyDisabled = btn.disabled;
+                const activeClasses = currency === 'souls'
+                    ? ['bg-purple-600', 'hover:bg-purple-500', 'text-white', 'shadow-[0_2px_0_#4c1d95]']
+                    : ['bg-yellow-500', 'hover:bg-yellow-400', 'text-black', 'shadow-[0_2px_0_#a16207]'];
                 
                 if (canAfford && isCurrentlyDisabled) {
                     btn.disabled = false;
                     btn.classList.remove('bg-gray-700', 'text-gray-500', 'cursor-not-allowed');
-                    btn.classList.add('bg-yellow-500', 'hover:bg-yellow-400', 'text-black', 'shadow-[0_2px_0_#a16207]');
+                    btn.classList.add(...activeClasses);
                 } else if (!canAfford && !isCurrentlyDisabled) {
                     btn.disabled = true;
                     btn.classList.add('bg-gray-700', 'text-gray-500', 'cursor-not-allowed');
-                    btn.classList.remove('bg-yellow-500', 'hover:bg-yellow-400', 'text-black', 'shadow-[0_2px_0_#a16207]');
+                    btn.classList.remove('bg-yellow-500', 'hover:bg-yellow-400', 'text-black', 'shadow-[0_2px_0_#a16207]', 'bg-purple-600', 'hover:bg-purple-500', 'text-white', 'shadow-[0_2px_0_#4c1d95]');
                 }
             });
         }
@@ -814,6 +990,7 @@
             if (currentTab === 'shop') renderShop();
             if (currentTab === 'staff') renderStaff();
             if (currentTab === 'upgrade') renderUpgrade();
+            if (currentTab === 'kingdom') renderKingdom();
             if (currentTab === 'prestige') renderPrestige();
             if (currentTab === 'achievements') renderAchievements();
             if (currentTab === 'lore') renderLore();
@@ -865,6 +1042,189 @@
                     ${state.staff.awakened_monkey > 0 && state.staff.awakened_farmer > 0 && state.staff.awakened_harvester > 0 && state.staff.awakened_manager > 0 && state.staff.awakened_god > 0 ? `<div class="text-xs text-purple-300 mt-1">🔥 覚醒の共鳴発動中！ (自動収益 x3.0)</div>` : `<div class="text-[9px] text-gray-600 border border-gray-700 p-1 rounded mt-1">??? (基本の覚醒5種を集めよ)</div>`}
                 </div>
             `;
+        }
+
+        function getKingdomSlotCap() {
+            return 3 + state.kingdom.upgrades.barracks * 2;
+        }
+
+        function getKingdomUsedSlots() {
+            let used = 0;
+            for (let id in WARRIOR_INFO) {
+                used += (state.kingdom.warriors[id] || 0) * WARRIOR_INFO[id].slot;
+            }
+            return used;
+        }
+
+        function getWarriorCost(id) {
+            const info = WARRIOR_INFO[id];
+            const level = state.kingdom.warriors[id] || 0;
+            return Math.floor(info.baseCost * Math.pow(info.costScale, level));
+        }
+
+        function getKingdomUpgradeCost(id) {
+            const info = KINGDOM_UPGRADE_INFO[id];
+            const level = state.kingdom.upgrades[id] || 0;
+            const softCap = info.softCap ?? info.max;
+            if (level <= softCap) return Math.floor(info.baseCost * Math.pow(info.costScale, level));
+            const softCapCost = info.baseCost * Math.pow(info.costScale, softCap);
+            return Math.floor(softCapCost * Math.pow(info.lateScale || info.costScale, level - softCap));
+        }
+
+        function getKingdomAttackPower() {
+            const labBonus = 1 + state.kingdom.upgrades.lab * 0.2;
+            let attack = 0;
+            for (let id in WARRIOR_INFO) {
+                attack += WARRIOR_INFO[id].attack * (state.kingdom.warriors[id] || 0);
+            }
+            const supplyBonus = Math.sqrt(Math.max(0, cachedAutoPower)) * 0.05;
+            return (attack * labBonus) + supplyBonus;
+        }
+
+        function getKingdomThreatScale(wave = state.kingdom.wave) {
+            const economyPower = Math.max(cachedAutoPower, state.money / 60, state.lifetimeMoney / 900, 2500);
+            const economyScale = Math.pow(economyPower / 2500, 0.45);
+            const waveScale = Math.pow(1.08, Math.max(0, wave - 1));
+            return Math.max(1, economyScale * waveScale);
+        }
+
+        function getKingdomGuardRate() {
+            const guardians = state.kingdom.warriors.guardian || 0;
+            return Math.min(0.6, guardians * WARRIOR_INFO.guardian.guard);
+        }
+
+        function updateKingdomFastUI() {
+            if (!state.kingdom) return;
+            const castle = document.getElementById('ui-castle-hp');
+            const wall = document.getElementById('ui-wall-hp');
+            const timer = document.getElementById('ui-wave-timer');
+            if (!castle || !wall || !timer) return;
+
+            castle.innerText = `${Math.ceil(state.kingdom.castleHp)}/${state.kingdom.castleMaxHp}`;
+            wall.innerText = `${Math.ceil(state.kingdom.wallHp)}/${state.kingdom.wallMaxHp}`;
+            if (state.kingdom.waveActive) {
+                timer.innerText = `襲来中 ${activeEnemies.length}`;
+                timer.classList.add('text-red-300');
+            } else {
+                const sec = Math.max(0, Math.ceil((state.kingdom.nextWaveAt - Date.now()) / 1000));
+                timer.innerText = `${sec}s`;
+                timer.classList.remove('text-red-300');
+            }
+
+            const castleBar = document.getElementById('kingdom-castle-bar');
+            const wallBar = document.getElementById('kingdom-wall-bar');
+            const raidText = document.getElementById('kingdom-raid-text');
+            if (castleBar) castleBar.style.width = `${Math.max(0, state.kingdom.castleHp / state.kingdom.castleMaxHp * 100)}%`;
+            if (wallBar) wallBar.style.width = `${Math.max(0, state.kingdom.wallHp / state.kingdom.wallMaxHp * 100)}%`;
+            if (raidText) raidText.innerText = state.kingdom.waveActive ? `第${state.kingdom.wave}波 交戦中 / 残り${activeEnemies.length}体` : `次の襲撃まで ${Math.max(0, Math.ceil((state.kingdom.nextWaveAt - Date.now()) / 1000))}秒`;
+        }
+
+        function renderKingdom() {
+            const pane = document.getElementById('pane-kingdom');
+            const k = state.kingdom;
+            const usedSlots = getKingdomUsedSlots();
+            const cap = getKingdomSlotCap();
+            const castleRepairCost = Math.ceil(Math.max(0, k.castleMaxHp - k.castleHp) * 8);
+            const wallRepairCost = Math.ceil(Math.max(0, k.wallMaxHp - k.wallHp) * 4);
+            pane.innerHTML = `
+                <div class="bg-orange-950/40 border-2 border-orange-500 rounded-2xl p-3 space-y-3">
+                    <div class="flex items-center justify-between gap-2">
+                        <div>
+                            <div class="text-[9px] font-black text-orange-300 uppercase">Banana Kingdom</div>
+                            <div id="kingdom-raid-text" class="text-xs font-black text-white">${k.lastWaveResult}</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-[9px] text-orange-200 font-black">研究</div>
+                            <div class="text-lg font-black text-yellow-300">${k.research}</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-[9px] font-black text-red-200 mb-1"><span>城HP</span><span>${Math.ceil(k.castleHp)}/${k.castleMaxHp}</span></div>
+                        <div class="h-2 bg-gray-800 rounded-full overflow-hidden"><div id="kingdom-castle-bar" class="h-full bg-red-500 rounded-full" style="width:${Math.max(0, k.castleHp / k.castleMaxHp * 100)}%"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-[9px] font-black text-slate-200 mb-1"><span>防壁HP</span><span>${Math.ceil(k.wallHp)}/${k.wallMaxHp}</span></div>
+                        <div class="h-2 bg-gray-800 rounded-full overflow-hidden"><div id="kingdom-wall-bar" class="h-full bg-slate-300 rounded-full" style="width:${Math.max(0, k.wallHp / k.wallMaxHp * 100)}%"></div></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-[10px]">
+                        <div class="bg-black/30 rounded-xl p-2">
+                            <div class="text-gray-400 font-black">防衛火力</div>
+                            <div class="text-green-300 font-black">${formatMoney(getKingdomAttackPower())}/秒</div>
+                        </div>
+                        <div class="bg-black/30 rounded-xl p-2">
+                            <div class="text-gray-400 font-black">兵舎枠</div>
+                            <div class="text-yellow-300 font-black">${usedSlots}/${cap}</div>
+                        </div>
+                        <div class="bg-black/30 rounded-xl p-2">
+                            <div class="text-gray-400 font-black">脅威倍率</div>
+                            <div class="text-red-300 font-black">x${formatMoney(getKingdomThreatScale())}</div>
+                        </div>
+                        <div class="bg-black/30 rounded-xl p-2">
+                            <div class="text-gray-400 font-black">撃破数</div>
+                            <div class="text-orange-200 font-black">${formatMoney(k.enemiesDefeated)}</div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="repairKingdom('castle')" data-cost="${castleRepairCost}" data-force-disabled="${castleRepairCost <= 0 ? 'true' : 'false'}" class="buy-btn-ref bg-red-700 hover:bg-red-600 disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed text-white text-[10px] font-black rounded-lg py-2 transition-colors" ${castleRepairCost <= 0 || state.money < castleRepairCost ? 'disabled' : ''}>城修理 ${formatMoney(castleRepairCost)}</button>
+                        <button onclick="repairKingdom('wall')" data-cost="${wallRepairCost}" data-force-disabled="${wallRepairCost <= 0 ? 'true' : 'false'}" class="buy-btn-ref bg-slate-600 hover:bg-slate-500 disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed text-white text-[10px] font-black rounded-lg py-2 transition-colors" ${wallRepairCost <= 0 || state.money < wallRepairCost ? 'disabled' : ''}>壁修理 ${formatMoney(wallRepairCost)}</button>
+                    </div>
+                </div>
+
+                <div class="text-[10px] font-black text-orange-300 border-b border-orange-600 pb-1 mt-3 uppercase text-center">Banana Warriors</div>
+            `;
+
+            for (let id in WARRIOR_INFO) {
+                const info = WARRIOR_INFO[id];
+                const level = k.warriors[id] || 0;
+                const locked = k.upgrades.lab < info.unlockLab;
+                const capFull = usedSlots + info.slot > cap;
+                const cost = getWarriorCost(id);
+                const disabled = locked || capFull || state.money < cost;
+                const forceDisabled = locked || capFull;
+                const desc = locked ? `研究Lv.${info.unlockLab}で解放` : `${info.desc} / 火力+${info.attack}`;
+                pane.innerHTML += `
+                    <div class="bg-gray-800 p-3 rounded-2xl border border-gray-700 flex gap-3 items-center">
+                        <div class="w-10 h-10 rounded-lg flex items-center justify-center text-xl border border-orange-500 bg-orange-950/60">${info.icon}</div>
+                        <div class="flex-1 min-w-0">
+                            <div class="font-black text-[10px] truncate uppercase ${locked ? 'text-gray-500' : 'text-orange-200'}">${info.name} (Lv.${level})</div>
+                            <div class="text-[9px] text-gray-400 truncate opacity-80">${desc}</div>
+                            <div class="font-black text-yellow-400 text-xs mt-1">🍌 ${formatMoney(cost)} <span class="text-[9px] text-gray-500">枠${info.slot}</span></div>
+                        </div>
+                        <button onclick="buyWarrior('${id}')" data-cost="${cost}" data-force-disabled="${forceDisabled ? 'true' : 'false'}" class="buy-btn-ref px-3 py-1 rounded-lg font-black transition-all text-[10px] ${disabled ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-yellow-500 hover:bg-yellow-400 text-black shadow-[0_2px_0_#a16207] active:translate-y-0.5 active:shadow-none'}" ${disabled ? 'disabled' : ''}>HIRE</button>
+                    </div>
+                `;
+            }
+
+            pane.innerHTML += `<div class="text-[10px] font-black text-orange-300 border-b border-orange-600 pb-1 mt-3 uppercase text-center">Kingdom Facilities</div>`;
+
+            for (let id in KINGDOM_UPGRADE_INFO) {
+                const info = KINGDOM_UPGRADE_INFO[id];
+                const level = k.upgrades[id] || 0;
+                const maxed = level >= info.max;
+                const cost = getKingdomUpgradeCost(id);
+                const researchCost = id === 'lab' ? info.researchCost + level : info.researchCost;
+                const lacksResearch = k.research < researchCost;
+                const disabled = maxed || lacksResearch || state.money < cost;
+                const forceDisabled = maxed || lacksResearch;
+                pane.innerHTML += `
+                    <div class="bg-gray-800 p-3 rounded-2xl border border-gray-700 flex gap-3 items-center">
+                        <div class="text-2xl w-10 text-center">${info.icon}</div>
+                        <div class="flex-1 min-w-0">
+                            <div class="font-black text-[10px] truncate uppercase ${maxed ? 'text-green-400' : 'text-gray-300'}">${info.name} (Lv.${level}/${info.max})</div>
+                            <div class="text-[9px] text-gray-400 truncate opacity-80">${maxed ? '完成済み' : info.desc}</div>
+                            <div class="font-black text-yellow-400 text-xs mt-1">🍌 ${formatMoney(cost)} ${researchCost > 0 ? `<span class="text-purple-300"> / 研究${researchCost}</span>` : ''}</div>
+                        </div>
+                        <button onclick="buyKingdomUpgrade('${id}')" data-cost="${cost}" data-force-disabled="${forceDisabled ? 'true' : 'false'}" class="buy-btn-ref px-3 py-1 rounded-lg font-black transition-all text-[10px] ${disabled ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-yellow-500 hover:bg-yellow-400 text-black shadow-[0_2px_0_#a16207] active:translate-y-0.5 active:shadow-none'}" ${disabled ? 'disabled' : ''}>UP</button>
+                    </div>
+                `;
+            }
+
+            pane.innerHTML += `
+                <button onclick="manualStartWave()" class="w-full mt-3 bg-red-600 hover:bg-red-500 text-white font-black py-2 rounded-xl border-b-4 border-red-900 active:translate-y-1 active:border-b-0 transition-all text-xs">
+                    今すぐ襲撃を呼ぶ
+                </button>
+            `;
+            updateKingdomFastUI();
         }
 
         function renderAchievements() {
@@ -931,7 +1291,7 @@
                             <div class="text-[9px] text-gray-400 truncate opacity-70">BPS: +${formatMoney(info.basePower * (amt || 1))}</div>
                             <div class="font-black text-purple-400 text-xs mt-1">✨ ${cost} SOULS</div>
                         </div>
-                        <button onclick="buyPrestigeStaff('${id}')" data-cost="${cost}" class="buy-btn-ref px-3 py-1 rounded-lg font-black transition-all text-[10px] ${state.souls < cost || amt === 0 ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-500 text-white shadow-[0_2px_0_#4c1d95] active:translate-y-0.5 active:shadow-none'}" ${state.souls < cost || amt === 0 ? 'disabled' : ''}>HIRE</button>
+                        <button onclick="buyPrestigeStaff('${id}')" data-cost="${cost}" data-currency="souls" class="buy-btn-ref px-3 py-1 rounded-lg font-black transition-all text-[10px] ${state.souls < cost || amt === 0 ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-500 text-white shadow-[0_2px_0_#4c1d95] active:translate-y-0.5 active:shadow-none'}" ${state.souls < cost || amt === 0 ? 'disabled' : ''}>HIRE</button>
                     </div>
                 `;
             }
@@ -965,14 +1325,14 @@
                             <div class="text-[9px] text-gray-400 truncate opacity-70">${info.desc}</div>
                             <div class="font-black text-purple-400 text-xs mt-1">✨ ${cost} SOULS</div>
                         </div>
-                        <button onclick="buyPrestigeUpgrade('${id}')" data-cost="${cost}" class="buy-btn-ref px-3 py-1 rounded-lg font-black transition-all text-[10px] ${state.souls < cost || amt === 0 ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-500 text-white shadow-[0_2px_0_#4c1d95] active:translate-y-0.5 active:shadow-none'}" ${state.souls < cost || amt === 0 ? 'disabled' : ''}>UPGRD</button>
+                        <button onclick="buyPrestigeUpgrade('${id}')" data-cost="${cost}" data-currency="souls" class="buy-btn-ref px-3 py-1 rounded-lg font-black transition-all text-[10px] ${state.souls < cost || amt === 0 ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-500 text-white shadow-[0_2px_0_#4c1d95] active:translate-y-0.5 active:shadow-none'}" ${state.souls < cost || amt === 0 ? 'disabled' : ''}>UPGRD</button>
                     </div>
                 `;
             }
         }
 
         function clickBanana(e) {
-            initAudio(); let isCrit = Math.random() < (0.05 + state.upgrades.critChance * 0.01);
+            initAudio(); let isCrit = Math.random() < Math.min(0.95, 0.05 + state.upgrades.critChance * 0.003);
             let pwr = cachedClickPower * (isCrit ? (10 + state.upgrades.critDamage * 0.5) : 1);
             pwr *= feverMultiplier;
             if (isCrit) { playSound('critical'); spawnCritText(e.clientX, e.clientY); shakeScreen(); }
@@ -996,6 +1356,69 @@
             else { amt = Math.min(amt, info.max - level); cost = getCost(info.baseCost, level, amt, 1.3); }
             if (amt > 0 && state.money >= cost) { state.money -= cost; state.upgrades[id] += amt; playSound('buy'); calculatePowers(); updateFastUI(); updateTabUI(); }
         }
+
+        function buyWarrior(id) {
+            const info = WARRIOR_INFO[id];
+            if (!info || state.kingdom.upgrades.lab < info.unlockLab) return;
+            if (getKingdomUsedSlots() + info.slot > getKingdomSlotCap()) {
+                showKingdomNotice("兵舎が満員です", "兵舎を拡張すると戦士を増やせます。");
+                return;
+            }
+            const cost = getWarriorCost(id);
+            if (state.money < cost) return;
+            state.money -= cost;
+            state.kingdom.warriors[id] += 1;
+            playSound('buy');
+            showKingdomNotice(`${info.name} 配置`, `防衛火力が ${formatMoney(getKingdomAttackPower())}/秒 になりました。`);
+            updateFastUI();
+            updateTabUI();
+            saveGame();
+        }
+
+        function buyKingdomUpgrade(id) {
+            const info = KINGDOM_UPGRADE_INFO[id];
+            if (!info) return;
+            const level = state.kingdom.upgrades[id] || 0;
+            if (level >= info.max) return;
+            const cost = getKingdomUpgradeCost(id);
+            const researchCost = id === 'lab' ? info.researchCost + level : info.researchCost;
+            if (state.money < cost || state.kingdom.research < researchCost) return;
+
+            state.money -= cost;
+            state.kingdom.research -= researchCost;
+            state.kingdom.upgrades[id] += 1;
+            if (id === 'castle') {
+                state.kingdom.castleMaxHp += 80;
+                state.kingdom.castleHp = Math.min(state.kingdom.castleMaxHp, state.kingdom.castleHp + 80);
+            }
+            if (id === 'wall') {
+                state.kingdom.wallMaxHp += 55;
+                state.kingdom.wallHp = Math.min(state.kingdom.wallMaxHp, state.kingdom.wallHp + 55);
+            }
+            playSound('buy');
+            showKingdomNotice(`${info.name} 完了`, info.desc);
+            updateFastUI();
+            updateTabUI();
+            saveGame();
+        }
+
+        function repairKingdom(target) {
+            const k = state.kingdom;
+            const isCastle = target === 'castle';
+            const missing = isCastle ? k.castleMaxHp - k.castleHp : k.wallMaxHp - k.wallHp;
+            if (missing <= 0) return;
+            const cost = Math.ceil(missing * (isCastle ? 8 : 4));
+            if (state.money < cost) return;
+            state.money -= cost;
+            if (isCastle) k.castleHp = k.castleMaxHp;
+            else k.wallHp = k.wallMaxHp;
+            playSound('buy');
+            showKingdomNotice(isCastle ? "城を修理しました" : "防壁を修理しました", `消費: ${formatMoney(cost)} 🍌`);
+            updateFastUI();
+            updateTabUI();
+            saveGame();
+        }
+
         function buyPrestigeUpgrade(id) {
             let info = PRESTIGE_UPGRADES[id]; let level = state.prestige[id];
             
@@ -1058,7 +1481,8 @@
         function spawnConveyorItem() {
             const item = document.createElement('div'); item.className = 'convey-item text-4xl cursor-pointer select-none pointer-events-auto';
             let r = Math.random();
-            if (r < (0.02 + state.upgrades.rareRate * 0.01)) { item.innerText = '🎁'; item.classList.add('animate-pulse'); item.style.filter = 'drop-shadow(0 0 10px #fbbf24)'; item.onclick = (e) => { collectRare(e); item.remove(); }; }
+            const rareChance = Math.min(0.45, 0.02 + state.upgrades.rareRate * 0.0017);
+            if (r < rareChance) { item.innerText = '🎁'; item.classList.add('animate-pulse'); item.style.filter = 'drop-shadow(0 0 10px #fbbf24)'; item.onclick = (e) => { collectRare(e); item.remove(); }; }
             else if (r < 0.1) { item.innerText = '🤢'; item.onclick = (e) => { collectTrash(e, true); item.remove(); }; }
             else if (r < 0.15) { item.innerText = '🍎'; item.onclick = (e) => { collectTrash(e, false); item.remove(); }; }
             else { item.innerText = SHOPS[state.shopIdx].icon; item.classList.add('opacity-40', 'pointer-events-none'); }
@@ -1084,12 +1508,225 @@
             document.body.appendChild(p); setTimeout(() => p.remove(), 1000);
         }
 
+        function showKingdomNotice(title, body = "") {
+            const notice = document.getElementById('kingdom-notice');
+            if (!notice) return;
+            notice.innerHTML = `
+                <div class="text-xs font-black text-yellow-300">${title}</div>
+                ${body ? `<div class="text-[10px] text-gray-200 mt-0.5">${body}</div>` : ''}
+            `;
+            notice.classList.remove('opacity-0', '-translate-y-2');
+            notice.classList.add('opacity-100');
+            clearTimeout(kingdomNoticeTimer);
+            kingdomNoticeTimer = setTimeout(() => {
+                notice.classList.remove('opacity-100');
+                notice.classList.add('opacity-0');
+            }, 2600);
+        }
+
+        function manualStartWave() {
+            if (state.kingdom.waveActive) return;
+            state.kingdom.nextWaveAt = Date.now();
+            startKingdomWave();
+            updateFastUI();
+            updateTabUI();
+        }
+
+        function startKingdomWave() {
+            if (state.kingdom.waveActive) return;
+            state.kingdom.wave += 1;
+            state.kingdom.waveActive = true;
+            state.kingdom.lastWaveResult = `第${state.kingdom.wave}波が襲来中！`;
+            const wave = state.kingdom.wave;
+            const count = Math.min(3 + Math.floor(wave / 2), 18);
+            const threatScale = getKingdomThreatScale(wave);
+            const types = [
+                { name: "腹ペコサル", icon: "🐒", hpMult: 1, attackMult: 1, speedMult: 1 },
+                { name: "ショウジョウバエ隊", icon: "🪰", hpMult: 0.65, attackMult: 0.7, speedMult: 1.5 },
+                { name: "ボスサル", icon: "🦍", hpMult: 2.4, attackMult: 1.8, speedMult: 0.7 },
+                { name: "腐敗バナナ巨兵", icon: "🍌💀", hpMult: 4.2, attackMult: 2.4, speedMult: 0.55 }
+            ];
+            for (let i = 0; i < count; i++) {
+                let type = types[Math.random() < 0.28 ? 1 : 0];
+                if (wave >= 12 && Math.random() < 0.18) type = types[2];
+                if (wave % 5 === 0 && i === count - 1) type = types[2];
+                if (wave >= 25 && wave % 10 === 0 && i === count - 1) type = types[3];
+                spawnKingdomEnemy(type, i, count, wave, threatScale);
+            }
+            playSound('critical');
+            showKingdomNotice(`第${wave}波 襲来`, `脅威倍率 x${formatMoney(threatScale)}。敵をクリックして城に近づけるな！`);
+            renderKingdom();
+        }
+
+        function spawnKingdomEnemy(type, index, count, wave, threatScale) {
+            const layer = document.getElementById('kingdom-enemy-layer');
+            if (!layer) return;
+            const waveHp = (18 + wave * 7 + Math.pow(wave, 1.35) * 4) * Math.pow(1.21, Math.max(0, wave - 1));
+            const hp = Math.floor(waveHp * threatScale * type.hpMult);
+            const attackScale = Math.pow(threatScale, 0.2) * Math.pow(1.1, Math.max(0, wave - 1));
+            const enemy = {
+                id: ++enemySeq,
+                name: type.name,
+                icon: type.icon,
+                hp,
+                maxHp: hp,
+                attack: Math.floor((12 + wave * 4) * attackScale * type.attackMult),
+                reward: Math.floor(40 + Math.sqrt(hp) * 12 + wave * 60 + cachedAutoPower * 0.25),
+                x: 94 + index * 5,
+                y: 28 + (index % Math.max(1, count)) * (44 / Math.max(1, count - 1 || 1)) + (Math.random() * 8 - 4),
+                speed: (4.8 + Math.min(8, wave * 0.16)) * type.speedMult,
+                el: document.createElement('div')
+            };
+            enemy.el.className = 'kingdom-enemy';
+            enemy.el.innerHTML = `
+                <div class="text-3xl leading-none">${enemy.icon}</div>
+                <div class="text-[9px] font-black text-white leading-none">${enemy.name}</div>
+                <div class="enemy-hp"><div class="enemy-hp-fill" style="width:100%"></div></div>
+            `;
+            enemy.el.onclick = (ev) => {
+                ev.stopPropagation();
+                const dmg = Math.max(5, cachedClickPower * 3 * feverMultiplier);
+                damageEnemy(enemy.id, dmg, true, ev);
+            };
+            layer.appendChild(enemy.el);
+            activeEnemies.push(enemy);
+            updateEnemyElement(enemy);
+        }
+
+        function updateEnemyElement(enemy) {
+            if (!enemy.el) return;
+            enemy.el.style.left = `${enemy.x}%`;
+            enemy.el.style.top = `${Math.min(78, Math.max(18, enemy.y))}%`;
+            const fill = enemy.el.querySelector('.enemy-hp-fill');
+            if (fill) fill.style.width = `${Math.max(0, enemy.hp / enemy.maxHp * 100)}%`;
+        }
+
+        function damageEnemy(id, damage, manual = false, ev = null) {
+            const enemy = activeEnemies.find(e => e.id === id);
+            if (!enemy) return;
+            enemy.hp -= damage;
+            enemy.el.classList.add('hit');
+            setTimeout(() => enemy.el && enemy.el.classList.remove('hit'), 90);
+            if (manual && ev) {
+                initAudio();
+                playSound('click');
+                spawnParticle(ev.clientX, ev.clientY, '⚔️');
+            }
+            if (enemy.hp <= 0) {
+                defeatEnemy(enemy, manual, ev);
+            } else {
+                updateEnemyElement(enemy);
+            }
+        }
+
+        function defeatEnemy(enemy, manual = false, ev = null) {
+            activeEnemies = activeEnemies.filter(e => e.id !== enemy.id);
+            if (enemy.el) enemy.el.remove();
+            state.kingdom.enemiesDefeated += 1;
+            state.money += enemy.reward;
+            state.totalMoney += enemy.reward;
+            state.lifetimeMoney += enemy.reward;
+            if (manual && ev) spawnCritText(ev.clientX, ev.clientY, `撃破 +${formatMoney(enemy.reward)}`);
+            if (activeEnemies.length === 0 && state.kingdom.waveActive) finishKingdomWave();
+        }
+
+        function applyKingdomDamage(rawDamage) {
+            const reduced = Math.max(2, rawDamage * (1 - getKingdomGuardRate()));
+            let damage = reduced;
+            if (state.kingdom.wallHp > 0) {
+                const wallDamage = Math.min(state.kingdom.wallHp, damage);
+                state.kingdom.wallHp -= wallDamage;
+                damage -= wallDamage;
+            }
+            if (damage > 0) state.kingdom.castleHp -= damage;
+            if (state.kingdom.castleHp <= 0) failKingdomWave();
+            else {
+                shakeScreen();
+                showKingdomNotice("防壁に被害！", `修理にバナナを回そう。`);
+            }
+        }
+
+        function finishKingdomWave() {
+            const wave = state.kingdom.wave;
+            const threatScale = getKingdomThreatScale(wave);
+            const reward = Math.floor(120 + wave * 160 + cachedAutoPower * (4 + Math.min(8, wave * 0.12)) + Math.sqrt(threatScale) * 250);
+            const research = 1 + Math.floor(wave / 3) + Math.floor(Math.log10(threatScale + 1));
+            state.money += reward;
+            state.totalMoney += reward;
+            state.lifetimeMoney += reward;
+            state.kingdom.research += research;
+            state.kingdom.waveActive = false;
+            state.kingdom.nextWaveAt = Date.now() + 45000;
+            state.kingdom.lastWaveResult = `第${wave}波を防衛！ +${formatMoney(reward)}🍌 / 研究+${research}`;
+            playSound('rare');
+            showKingdomNotice("防衛成功", `報酬 ${formatMoney(reward)} 🍌 / 研究+${research}`);
+            updateFastUI();
+            updateTabUI();
+            saveGame();
+        }
+
+        function failKingdomWave() {
+            const loss = Math.floor(state.money * 0.1);
+            state.money = Math.max(0, state.money - loss);
+            clearKingdomEnemies();
+            state.kingdom.waveActive = false;
+            state.kingdom.castleHp = Math.ceil(state.kingdom.castleMaxHp * 0.5);
+            state.kingdom.wallHp = Math.ceil(state.kingdom.wallMaxHp * 0.35);
+            state.kingdom.nextWaveAt = Date.now() + 60000;
+            state.kingdom.lastWaveResult = `城が崩れた... バナナ-${formatMoney(loss)}。修理して立て直そう。`;
+            shakeScreen();
+            showKingdomNotice("防衛失敗", `バナナを${formatMoney(loss)}失いました。`);
+            updateFastUI();
+            updateTabUI();
+            saveGame();
+        }
+
+        function clearKingdomEnemies() {
+            activeEnemies.forEach(enemy => {
+                if (enemy.el) enemy.el.remove();
+            });
+            activeEnemies = [];
+        }
+
+        function tickKingdom(deltaSec) {
+            if (!state.kingdom.waveActive && Date.now() >= state.kingdom.nextWaveAt) {
+                startKingdomWave();
+            }
+            if (activeEnemies.length === 0) {
+                updateKingdomFastUI();
+                return;
+            }
+
+            const autoDamage = getKingdomAttackPower() * deltaSec;
+            if (autoDamage > 0) {
+                const target = activeEnemies.slice().sort((a, b) => a.x - b.x)[0];
+                if (target) damageEnemy(target.id, autoDamage, false);
+            }
+
+            activeEnemies.slice().forEach(enemy => {
+                if (!activeEnemies.includes(enemy)) return;
+                enemy.x -= enemy.speed * deltaSec;
+                if (enemy.x <= 12) {
+                    activeEnemies = activeEnemies.filter(e => e.id !== enemy.id);
+                    if (enemy.el) enemy.el.remove();
+                    applyKingdomDamage(enemy.attack);
+                } else {
+                    updateEnemyElement(enemy);
+                }
+            });
+
+            if (activeEnemies.length === 0 && state.kingdom.waveActive) finishKingdomWave();
+            updateKingdomFastUI();
+        }
+
         function doPrestige() {
             let souls = Math.floor(Math.pow(state.totalMoney / 100000, 1 / 2.5)) * 2;
             if (souls <= 0) { alert("もっとバナナが必要です（総収益10万以上）"); return; }
             if (confirm("全てをリセットして黄金の魂を手に入れますか？")) {
                 state.money = state.prestige.startMoney * 100000; state.totalMoney = 0; state.souls += souls; state.shopIdx = 0;
                 for (let k in state.staff) state.staff[k] = 0; for (let k in state.upgrades) state.upgrades[k] = 0;
+                state.kingdom = createKingdomState();
+                clearKingdomEnemies();
                 state.isSingularity = true; document.body.classList.add('singularity-mode');
                 state.prestigeUnlocked = true;
                 document.getElementById('staff-stage').innerHTML = ''; activeStaff = []; 
@@ -1195,11 +1832,11 @@
                     let earn = cachedAutoPower * 3600;
                     earn = Math.max(100, earn);
                     state.money += earn; state.totalMoney += earn;
-                    alert(`黄金のバナナ！\n瞬時に1時間分の収益(${formatMoney(earn)} 🍌)を獲得！`);
+                    showKingdomNotice("黄金のバナナ！", `1時間分の収益 ${formatMoney(earn)} 🍌 を獲得`);
                 } else {
                     isFever = true;
                     feverMultiplier = 777;
-                    alert(`バナナフィーバー！！\n15秒間、クリック力と自動収益が777倍になります！`);
+                    showKingdomNotice("バナナフィーバー！", "15秒間、クリック力と自動収益が777倍。");
                     setTimeout(() => {
                         isFever = false;
                         feverMultiplier = 1;
@@ -1236,6 +1873,7 @@
                 let income = actualAuto * (1 + state.upgrades.staffPower * 0.1) * (1 + state.prestige.globalMult * 0.5) * getSynergyMult() * feverMultiplier;
                 if (income > 0) { state.money += income / 10; state.totalMoney += income / 10; updateFastUI(); }
                 if (Date.now() - lastSpawnTime >=   3000) { spawnConveyorItem(); lastSpawnTime = Date.now(); }
+                tickKingdom(0.1);
             }, 100);
             setInterval(() => {
                 if (Math.random() < 0.3) spawnGoldenBanana();
