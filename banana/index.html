@@ -674,24 +674,28 @@
         }
 
         // --- Game State ---
-        let state = {
-            money: 0,
-            totalMoney: 0,
-            lifetimeMoney: 0,
-            souls: 0,
-            shopIdx: 0,
-            staff: { monkey: 0, farmer: 0, harvester: 0, manager: 0, god: 0 },
-            prestigeStaff: { wraith: 0, angel: 0, reaper: 0, banana_ai: 0, taataru: 0 },
-            upgrades: { clickPower: 0, staffPower: 0, critChance: 0, critDamage: 0, rareRate: 0 },
-            prestige: { globalMult: 0, startMoney: 0, clickBoost: 0 },
-            isSingularity: false,
-            prestigeUnlocked: false,
-            realPurchases: 0,
-            unlockedAchievements: [],
-            realMonkeyLevel: 0,
-            kingdom: createKingdomState(),
-            lastSaveTime: Date.now()
-        };
+        function createInitialState() {
+            return {
+                money: 0,
+                totalMoney: 0,
+                lifetimeMoney: 0,
+                souls: 0,
+                shopIdx: 0,
+                staff: { monkey: 0, farmer: 0, harvester: 0, manager: 0, god: 0 },
+                prestigeStaff: { wraith: 0, angel: 0, reaper: 0, banana_ai: 0, taataru: 0 },
+                upgrades: { clickPower: 0, staffPower: 0, critChance: 0, critDamage: 0, rareRate: 0 },
+                prestige: { globalMult: 0, startMoney: 0, clickBoost: 0 },
+                isSingularity: false,
+                prestigeUnlocked: false,
+                realPurchases: 0,
+                unlockedAchievements: [],
+                realMonkeyLevel: 0,
+                kingdom: createKingdomState(),
+                lastSaveTime: Date.now()
+            };
+        }
+
+        let state = createInitialState();
 
         let activeStaff = [];
         let buyMode = 1;
@@ -1059,12 +1063,101 @@
         function getWarriorCost(id) {
             const info = WARRIOR_INFO[id];
             const level = state.kingdom.warriors[id] || 0;
+            return getWarriorCostAt(id, level);
+        }
+
+        function getWarriorCostAt(id, level) {
+            const info = WARRIOR_INFO[id];
             return Math.floor(info.baseCost * Math.pow(info.costScale, level));
+        }
+
+        function getWarriorBatchCost(id, level, amount) {
+            let cost = 0;
+            for (let i = 0; i < amount; i++) {
+                cost += getWarriorCostAt(id, level + i);
+            }
+            return cost;
+        }
+
+        function getWarriorPurchasePlan(id) {
+            const info = WARRIOR_INFO[id];
+            const level = state.kingdom.warriors[id] || 0;
+            const slotsAvailable = Math.floor((getKingdomSlotCap() - getKingdomUsedSlots()) / info.slot);
+            const nextCost = getWarriorCostAt(id, level);
+            if (slotsAvailable <= 0 || state.kingdom.upgrades.lab < info.unlockLab) {
+                return { amount: 0, cost: nextCost, displayAmount: 1 };
+            }
+
+            if (buyMode === 'MAX') {
+                let amount = 0;
+                let cost = 0;
+                while (amount < slotsAvailable) {
+                    const next = getWarriorCostAt(id, level + amount);
+                    if (cost + next > state.money) break;
+                    cost += next;
+                    amount++;
+                }
+                return { amount, cost: amount > 0 ? cost : nextCost, displayAmount: amount > 0 ? amount : 1 };
+            }
+
+            const amount = Math.min(buyMode, slotsAvailable);
+            return { amount, cost: getWarriorBatchCost(id, level, amount), displayAmount: amount };
         }
 
         function getKingdomUpgradeCost(id) {
             const info = KINGDOM_UPGRADE_INFO[id];
             const level = state.kingdom.upgrades[id] || 0;
+            const softCap = info.softCap ?? info.max;
+            if (level <= softCap) return Math.floor(info.baseCost * Math.pow(info.costScale, level));
+            const softCapCost = info.baseCost * Math.pow(info.costScale, softCap);
+            return Math.floor(softCapCost * Math.pow(info.lateScale || info.costScale, level - softCap));
+        }
+
+        function getKingdomUpgradeResearchCost(id, level) {
+            const info = KINGDOM_UPGRADE_INFO[id];
+            return id === 'lab' ? info.researchCost + level : info.researchCost;
+        }
+
+        function getKingdomUpgradePlan(id) {
+            const info = KINGDOM_UPGRADE_INFO[id];
+            const level = state.kingdom.upgrades[id] || 0;
+            const remaining = Math.max(0, info.max - level);
+            const nextCost = remaining > 0 ? getKingdomUpgradeCost(id) : 0;
+            const nextResearch = remaining > 0 ? getKingdomUpgradeResearchCost(id, level) : 0;
+            if (remaining <= 0) return { amount: 0, cost: 0, research: 0, displayAmount: 0 };
+
+            if (buyMode === 'MAX') {
+                let amount = 0;
+                let cost = 0;
+                let research = 0;
+                while (amount < remaining) {
+                    const nextMoney = getKingdomUpgradeCostAtLevel(id, level + amount);
+                    const nextResearchCost = getKingdomUpgradeResearchCost(id, level + amount);
+                    if (cost + nextMoney > state.money || research + nextResearchCost > state.kingdom.research) break;
+                    cost += nextMoney;
+                    research += nextResearchCost;
+                    amount++;
+                }
+                return {
+                    amount,
+                    cost: amount > 0 ? cost : nextCost,
+                    research: amount > 0 ? research : nextResearch,
+                    displayAmount: amount > 0 ? amount : 1
+                };
+            }
+
+            const amount = Math.min(buyMode, remaining);
+            let cost = 0;
+            let research = 0;
+            for (let i = 0; i < amount; i++) {
+                cost += getKingdomUpgradeCostAtLevel(id, level + i);
+                research += getKingdomUpgradeResearchCost(id, level + i);
+            }
+            return { amount, cost, research, displayAmount: amount };
+        }
+
+        function getKingdomUpgradeCostAtLevel(id, level) {
+            const info = KINGDOM_UPGRADE_INFO[id];
             const softCap = info.softCap ?? info.max;
             if (level <= softCap) return Math.floor(info.baseCost * Math.pow(info.costScale, level));
             const softCapCost = info.baseCost * Math.pow(info.costScale, softCap);
@@ -1177,11 +1270,12 @@
                 const info = WARRIOR_INFO[id];
                 const level = k.warriors[id] || 0;
                 const locked = k.upgrades.lab < info.unlockLab;
-                const capFull = usedSlots + info.slot > cap;
-                const cost = getWarriorCost(id);
-                const disabled = locked || capFull || state.money < cost;
+                const plan = getWarriorPurchasePlan(id);
+                const capFull = plan.amount === 0 && !locked && usedSlots + info.slot > cap;
+                const cost = plan.cost;
+                const disabled = locked || capFull || plan.amount === 0 || state.money < cost;
                 const forceDisabled = locked || capFull;
-                const desc = locked ? `研究Lv.${info.unlockLab}で解放` : `${info.desc} / 火力+${info.attack}`;
+                const desc = locked ? `研究Lv.${info.unlockLab}で解放` : `${info.desc} / 今回x${plan.displayAmount} / 火力+${formatMoney(info.attack * plan.displayAmount)}`;
                 pane.innerHTML += `
                     <div class="bg-gray-800 p-3 rounded-2xl border border-gray-700 flex gap-3 items-center">
                         <div class="w-10 h-10 rounded-lg flex items-center justify-center text-xl border border-orange-500 bg-orange-950/60">${info.icon}</div>
@@ -1190,7 +1284,7 @@
                             <div class="text-[9px] text-gray-400 truncate opacity-80">${desc}</div>
                             <div class="font-black text-yellow-400 text-xs mt-1">🍌 ${formatMoney(cost)} <span class="text-[9px] text-gray-500">枠${info.slot}</span></div>
                         </div>
-                        <button onclick="buyWarrior('${id}')" data-cost="${cost}" data-force-disabled="${forceDisabled ? 'true' : 'false'}" class="buy-btn-ref px-3 py-1 rounded-lg font-black transition-all text-[10px] ${disabled ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-yellow-500 hover:bg-yellow-400 text-black shadow-[0_2px_0_#a16207] active:translate-y-0.5 active:shadow-none'}" ${disabled ? 'disabled' : ''}>HIRE</button>
+                        <button onclick="buyWarrior('${id}')" data-cost="${cost}" data-force-disabled="${forceDisabled ? 'true' : 'false'}" class="buy-btn-ref px-3 py-1 rounded-lg font-black transition-all text-[10px] ${disabled ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-yellow-500 hover:bg-yellow-400 text-black shadow-[0_2px_0_#a16207] active:translate-y-0.5 active:shadow-none'}" ${disabled ? 'disabled' : ''}>HIRE${plan.displayAmount > 1 ? ` x${plan.displayAmount}` : ''}</button>
                     </div>
                 `;
             }
@@ -1201,20 +1295,21 @@
                 const info = KINGDOM_UPGRADE_INFO[id];
                 const level = k.upgrades[id] || 0;
                 const maxed = level >= info.max;
-                const cost = getKingdomUpgradeCost(id);
-                const researchCost = id === 'lab' ? info.researchCost + level : info.researchCost;
+                const plan = getKingdomUpgradePlan(id);
+                const cost = plan.cost;
+                const researchCost = plan.research;
                 const lacksResearch = k.research < researchCost;
-                const disabled = maxed || lacksResearch || state.money < cost;
+                const disabled = maxed || plan.amount === 0 || lacksResearch || state.money < cost;
                 const forceDisabled = maxed || lacksResearch;
                 pane.innerHTML += `
                     <div class="bg-gray-800 p-3 rounded-2xl border border-gray-700 flex gap-3 items-center">
                         <div class="text-2xl w-10 text-center">${info.icon}</div>
                         <div class="flex-1 min-w-0">
                             <div class="font-black text-[10px] truncate uppercase ${maxed ? 'text-green-400' : 'text-gray-300'}">${info.name} (Lv.${level}/${info.max})</div>
-                            <div class="text-[9px] text-gray-400 truncate opacity-80">${maxed ? '完成済み' : info.desc}</div>
+                            <div class="text-[9px] text-gray-400 truncate opacity-80">${maxed ? '完成済み' : `${info.desc} / 今回x${plan.displayAmount}`}</div>
                             <div class="font-black text-yellow-400 text-xs mt-1">🍌 ${formatMoney(cost)} ${researchCost > 0 ? `<span class="text-purple-300"> / 研究${researchCost}</span>` : ''}</div>
                         </div>
-                        <button onclick="buyKingdomUpgrade('${id}')" data-cost="${cost}" data-force-disabled="${forceDisabled ? 'true' : 'false'}" class="buy-btn-ref px-3 py-1 rounded-lg font-black transition-all text-[10px] ${disabled ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-yellow-500 hover:bg-yellow-400 text-black shadow-[0_2px_0_#a16207] active:translate-y-0.5 active:shadow-none'}" ${disabled ? 'disabled' : ''}>UP</button>
+                        <button onclick="buyKingdomUpgrade('${id}')" data-cost="${cost}" data-force-disabled="${forceDisabled ? 'true' : 'false'}" class="buy-btn-ref px-3 py-1 rounded-lg font-black transition-all text-[10px] ${disabled ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-yellow-500 hover:bg-yellow-400 text-black shadow-[0_2px_0_#a16207] active:translate-y-0.5 active:shadow-none'}" ${disabled ? 'disabled' : ''}>UP${plan.displayAmount > 1 ? ` x${plan.displayAmount}` : ''}</button>
                     </div>
                 `;
             }
@@ -1360,16 +1455,16 @@
         function buyWarrior(id) {
             const info = WARRIOR_INFO[id];
             if (!info || state.kingdom.upgrades.lab < info.unlockLab) return;
-            if (getKingdomUsedSlots() + info.slot > getKingdomSlotCap()) {
+            const plan = getWarriorPurchasePlan(id);
+            if (plan.amount <= 0 && getKingdomUsedSlots() + info.slot > getKingdomSlotCap()) {
                 showKingdomNotice("兵舎が満員です", "兵舎を拡張すると戦士を増やせます。");
                 return;
             }
-            const cost = getWarriorCost(id);
-            if (state.money < cost) return;
-            state.money -= cost;
-            state.kingdom.warriors[id] += 1;
+            if (plan.amount <= 0 || state.money < plan.cost) return;
+            state.money -= plan.cost;
+            state.kingdom.warriors[id] += plan.amount;
             playSound('buy');
-            showKingdomNotice(`${info.name} 配置`, `防衛火力が ${formatMoney(getKingdomAttackPower())}/秒 になりました。`);
+            showKingdomNotice(`${info.name} x${plan.amount} 配置`, `防衛火力が ${formatMoney(getKingdomAttackPower())}/秒 になりました。`);
             updateFastUI();
             updateTabUI();
             saveGame();
@@ -1380,23 +1475,22 @@
             if (!info) return;
             const level = state.kingdom.upgrades[id] || 0;
             if (level >= info.max) return;
-            const cost = getKingdomUpgradeCost(id);
-            const researchCost = id === 'lab' ? info.researchCost + level : info.researchCost;
-            if (state.money < cost || state.kingdom.research < researchCost) return;
+            const plan = getKingdomUpgradePlan(id);
+            if (plan.amount <= 0 || state.money < plan.cost || state.kingdom.research < plan.research) return;
 
-            state.money -= cost;
-            state.kingdom.research -= researchCost;
-            state.kingdom.upgrades[id] += 1;
+            state.money -= plan.cost;
+            state.kingdom.research -= plan.research;
+            state.kingdom.upgrades[id] += plan.amount;
             if (id === 'castle') {
-                state.kingdom.castleMaxHp += 80;
-                state.kingdom.castleHp = Math.min(state.kingdom.castleMaxHp, state.kingdom.castleHp + 80);
+                state.kingdom.castleMaxHp += 80 * plan.amount;
+                state.kingdom.castleHp = Math.min(state.kingdom.castleMaxHp, state.kingdom.castleHp + 80 * plan.amount);
             }
             if (id === 'wall') {
-                state.kingdom.wallMaxHp += 55;
-                state.kingdom.wallHp = Math.min(state.kingdom.wallMaxHp, state.kingdom.wallHp + 55);
+                state.kingdom.wallMaxHp += 55 * plan.amount;
+                state.kingdom.wallHp = Math.min(state.kingdom.wallMaxHp, state.kingdom.wallHp + 55 * plan.amount);
             }
             playSound('buy');
-            showKingdomNotice(`${info.name} 完了`, info.desc);
+            showKingdomNotice(`${info.name} x${plan.amount} 完了`, info.desc);
             updateFastUI();
             updateTabUI();
             saveGame();
@@ -1666,18 +1760,30 @@
         }
 
         function failKingdomWave() {
-            const loss = Math.floor(state.money * 0.1);
-            state.money = Math.max(0, state.money - loss);
+            resetGameAfterDefenseFailure();
+        }
+
+        function resetGameAfterDefenseFailure() {
             clearKingdomEnemies();
-            state.kingdom.waveActive = false;
-            state.kingdom.castleHp = Math.ceil(state.kingdom.castleMaxHp * 0.5);
-            state.kingdom.wallHp = Math.ceil(state.kingdom.wallMaxHp * 0.35);
-            state.kingdom.nextWaveAt = Date.now() + 60000;
-            state.kingdom.lastWaveResult = `城が崩れた... バナナ-${formatMoney(loss)}。修理して立て直そう。`;
             shakeScreen();
-            showKingdomNotice("防衛失敗", `バナナを${formatMoney(loss)}失いました。`);
-            updateFastUI();
-            updateTabUI();
+            state = createInitialState();
+            state.kingdom.lastWaveResult = "防衛失敗。王国は滅亡し、全て最初からやり直しです。";
+            activeStaff = [];
+            enemySeq = 0;
+            lastSpawnTime = Date.now();
+            isFever = false;
+            feverMultiplier = 1;
+            const stage = document.getElementById('staff-stage');
+            if (stage) stage.innerHTML = '';
+            document.body.classList.remove('singularity-mode');
+            document.getElementById('tab-btn-prestige').classList.add('hidden');
+            document.getElementById('ui-prestige-info').classList.add('hidden');
+            calculatePowers();
+            renderTierList();
+            renderComparisonCards();
+            setBuyMode(1);
+            switchTab('shop');
+            showKingdomNotice("防衛失敗", "城が落ちたので、全て最初からやり直しです。");
             saveGame();
         }
 
