@@ -1087,6 +1087,7 @@
 
     function renderProfile() {
       const profile = state.profile;
+      profile.title = "はじまりのクエスト管理者";
       const hpPercent = Math.min(100, Math.max(0, profile.hp));
 
       elements.playerName.textContent = profile.name;
