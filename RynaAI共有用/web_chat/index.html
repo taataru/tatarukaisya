@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ryna / らいな | 実験公開版</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <p class="eyebrow">TAATARU EMOTION AI / EXPERIMENTAL</p>
+      <h1>ryna / らいな</h1>
+      <p class="description">自分と相手の感情波の組み合わせで、学習した返し方を選ぶ実験中のブラウザ版です。</p>
+      <p class="description">らいなは感情表現の強い実験AIです。荒い言葉や重い反応を返す場合があります。</p>
+    </header>
+
+    <section class="panel" aria-label="AIとの会話">
+      <div class="status">
+        <div class="moods">
+          <div class="mood">
+            <span class="mood-dot" id="moodDot"></span>
+            <div>
+              <span class="label">自分の感情</span>
+              <strong id="zone">読込中</strong>
+            </div>
+          </div>
+          <div class="mood">
+            <span class="mood-dot" id="userMoodDot"></span>
+            <div>
+              <span class="label">相手の推定感情</span>
+              <strong id="userZone">読込中</strong>
+            </div>
+          </div>
+        </div>
+        <div class="state-detail">
+          <div class="coordinates" id="coordinates">自分 x: -- / y: --</div>
+          <div class="coordinates" id="userCoordinates">相手 x: -- / y: --</div>
+          <div class="memory" id="topicMemory">話題記憶: --</div>
+        </div>
+      </div>
+
+      <div id="messages" class="messages" aria-live="polite">
+        <article class="bubble ai">
+          <p>こんにちは。なにか 話し て みて ね</p>
+        </article>
+      </div>
+
+      <form id="chatForm" class="composer">
+        <label class="sr-only" for="input">メッセージ</label>
+        <input id="input" name="input" type="text" autocomplete="off"
+               placeholder="話しかけてみる..." maxlength="180" disabled>
+        <button id="sendButton" type="submit" disabled>送信</button>
+      </form>
+    </section>
+
+    <footer class="footer">
+      <button type="button" id="resetButton">感情と会話をリセット</button>
+      <p>公開用スナップショット版。会話はブラウザ内で処理され、外部へ送信されません。</p>
+    </footer>
+  </main>
+  <script src="./data/model-data.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
