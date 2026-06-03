@@ -3,17 +3,30 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AIクラウド | Gemma4 Chat</title>
+    <title>たるこ</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div class="app-shell">
+      <button
+        class="sidebar-toggle"
+        id="sidebarToggle"
+        type="button"
+        aria-label="会話ログを閉じる"
+        aria-expanded="true"
+        title="会話ログを閉じる"
+      >
+        <i data-lucide="panel-left-close"></i>
+      </button>
+
       <aside class="sidebar" aria-label="会話リスト">
         <div class="brand">
-          <div class="brand-mark" aria-hidden="true">G4</div>
+          <div class="brand-mark" aria-hidden="true">
+            <img src="assets/ai-avatar.png" alt="" />
+          </div>
           <div>
-            <p class="brand-kicker">AIクラウド</p>
-            <h1>Gemma4</h1>
+            <p class="brand-kicker">AIチャット</p>
+            <h1>たるこ</h1>
           </div>
         </div>
 
@@ -22,28 +35,21 @@
           <span>新しい会話</span>
         </button>
 
-        <nav class="chat-list" aria-label="最近の会話">
-          <button class="chat-thread is-active" type="button">
-            <span class="thread-title">商品企画の壁打ち</span>
-            <span class="thread-meta">今日 06:18</span>
-          </button>
-          <button class="chat-thread" type="button">
-            <span class="thread-title">Pythonエラー調査</span>
-            <span class="thread-meta">昨日 22:40</span>
-          </button>
-          <button class="chat-thread" type="button">
-            <span class="thread-title">メール文面の整理</span>
-            <span class="thread-meta">5月31日</span>
-          </button>
-        </nav>
+        <nav class="chat-list" aria-label="最近の会話"></nav>
 
-        <div class="storage-meter" aria-label="クラウド使用量">
+        <div class="storage-meter daily-quota" id="dailyQuota" aria-label="会話ノルマ">
           <div class="meter-label">
-            <span>クラウド</span>
-            <strong>68%</strong>
+            <span>会話ノルマ</span>
+            <strong id="quotaCount">0/20</strong>
+          </div>
+          <div class="quota-row">
+            <span class="quota-state" id="quotaState">あと20回</span>
+            <button class="quota-close" id="quotaClose" type="button" aria-label="会話ノルマを閉じる" title="閉じる">
+              <i data-lucide="x"></i>
+            </button>
           </div>
           <div class="meter-track">
-            <span></span>
+            <span id="quotaProgress"></span>
           </div>
         </div>
       </aside>
@@ -51,9 +57,8 @@
       <main class="chat-panel">
         <header class="topbar">
           <div class="model-card">
-            <img src="assets/ai-cloud-core.png" alt="AIクラウドのビジュアル" />
             <div>
-              <p>Gemma4 Cloud</p>
+              <p>たるこ</p>
               <span><b id="connectionDot"></b><span id="connectionLabel">未接続</span></span>
             </div>
           </div>
@@ -61,12 +66,6 @@
           <div class="topbar-actions" aria-label="会話操作">
             <button class="icon-button" type="button" aria-label="検索" title="検索">
               <i data-lucide="search"></i>
-            </button>
-            <button class="icon-button" type="button" aria-label="会話を保存" title="会話を保存">
-              <i data-lucide="download"></i>
-            </button>
-            <button class="icon-button" type="button" aria-label="設定" title="設定">
-              <i data-lucide="sliders-horizontal"></i>
             </button>
           </div>
         </header>
@@ -82,86 +81,44 @@
               spellcheck="false"
             />
           </label>
-          <label class="mode-field">
-            <span>形式</span>
-            <select id="apiMode">
-              <option value="ollama">Ollama</option>
-              <option value="openai">OpenAI互換</option>
-              <option value="custom">カスタムJSON</option>
-            </select>
-          </label>
           <label class="model-field">
             <span>モデル</span>
-            <input id="modelInput" type="text" value="gemma4:26b" autocomplete="off" spellcheck="false" />
+            <input id="modelInput" type="text" value="gemma4:e2b" autocomplete="off" spellcheck="false" />
           </label>
-          <button class="icon-button" id="saveConnection" type="button" aria-label="接続設定を保存" title="接続設定を保存">
-            <i data-lucide="save"></i>
-          </button>
           <button class="icon-button" id="testConnection" type="button" aria-label="接続テスト" title="接続テスト">
             <i data-lucide="plug-zap"></i>
           </button>
           <span class="status-pill" id="connectionStatus">未設定</span>
         </section>
 
-        <section class="messages" id="messages" aria-label="会話">
-          <article class="message assistant-message">
-            <div class="avatar">G4</div>
-            <div class="bubble">
-              <div class="bubble-head">
-                <strong>Gemma4</strong>
-                <span>06:18</span>
-              </div>
-              <p>
-                trycloudflare URLを設定すると、この画面からGemma4へ直接メッセージを送れます。
-              </p>
-            </div>
-          </article>
-
-          <article class="message user-message">
-            <div class="bubble">
-              <div class="bubble-head">
-                <strong>You</strong>
-                <span>06:19</span>
-              </div>
-              <p>GitHub Pagesで公開して、ブラウザから使えるようにしたい。</p>
-            </div>
-          </article>
-
-          <article class="message assistant-message">
-            <div class="avatar">G4</div>
-            <div class="bubble">
-              <div class="bubble-head">
-                <strong>Gemma4</strong>
-                <span>06:19</span>
-              </div>
-              <p>
-                Pagesでは静的サイトとして動きます。CORSは接続先のGemma4サーバー側で許可してください。
-              </p>
-              <div class="insight-row">
-                <span>Pages対応</span>
-                <span>CORS確認</span>
-                <span>Gemma4接続</span>
-              </div>
-            </div>
-          </article>
-        </section>
+        <section class="messages" id="messages" aria-label="会話"></section>
 
         <section class="composer-wrap" aria-label="入力欄">
           <div class="prompt-chips" aria-label="候補">
             <button type="button">接続テストをして</button>
+            <button type="button">この画像を見て</button>
             <button type="button">この文章を短くして</button>
             <button type="button">コードのエラーを見て</button>
           </div>
 
+          <div class="attachment-preview" id="attachmentPreview" aria-live="polite"></div>
+
           <form class="composer" id="composer">
-            <button class="icon-button" type="button" aria-label="ファイルを添付" title="ファイルを添付">
+            <button class="icon-button" id="attachImageButton" type="button" aria-label="画像を添付" title="画像を添付">
               <i data-lucide="paperclip"></i>
             </button>
+            <input
+              class="file-input"
+              id="imageInput"
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              multiple
+            />
             <textarea
               id="messageInput"
               name="message"
               rows="1"
-              placeholder="Gemma4にメッセージを送る"
+              placeholder="たるこにメッセージを送る"
               autocomplete="off"
             ></textarea>
             <button class="send-button" type="submit" aria-label="送信" title="送信">
@@ -170,62 +127,60 @@
           </form>
         </section>
       </main>
+    </div>
 
-      <aside class="inspector" aria-label="モデル設定">
-        <section class="visual-panel">
-          <img src="assets/ai-cloud-core.png" alt="" />
-          <div>
-            <p>Cloud Core</p>
-            <span>8 ノード接続中</span>
-          </div>
-        </section>
+    <div class="persona-modal" id="personaModal" aria-hidden="true">
+      <form class="persona-dialog" id="personaForm" role="dialog" aria-modal="true" aria-labelledby="personaTitle">
+        <div class="persona-head">
+          <h2 id="personaTitle">AI設定</h2>
+          <button class="icon-button" id="closePersona" type="button" aria-label="閉じる" title="閉じる">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
 
-        <section class="settings-section">
-          <div class="section-title">
-            <h2>公開設定</h2>
-            <span>GitHub Pages</span>
-          </div>
-          <label>
-            通信方式
-            <select>
-              <option>ブラウザ直送</option>
-            </select>
-          </label>
-          <label>
-            CORS
-            <select>
-              <option>接続先で許可</option>
-            </select>
-          </label>
-        </section>
+        <fieldset class="persona-group persona-group-two">
+          <legend>性別</legend>
+          <label><input type="radio" name="gender" value="女性" checked /><span>女性</span></label>
+          <label><input type="radio" name="gender" value="男性" /><span>男性</span></label>
+        </fieldset>
 
-        <section class="settings-section">
-          <div class="section-title">
-            <h2>パラメータ</h2>
-            <span>安定</span>
-          </div>
-          <label class="range-field">
-            創造性
-            <input type="range" min="0" max="100" value="42" />
-          </label>
-          <label class="range-field">
-            文脈保持
-            <input type="range" min="0" max="100" value="78" />
-          </label>
-        </section>
+        <fieldset class="persona-group">
+          <legend>関係</legend>
+          <label><input type="radio" name="relationship" value="友達" checked /><span>友達</span></label>
+          <label><input type="radio" name="relationship" value="恋人" /><span>恋人</span></label>
+          <label><input type="radio" name="relationship" value="相棒" /><span>相棒</span></label>
+          <label><input type="radio" name="relationship" value="先生" /><span>先生</span></label>
+        </fieldset>
 
-        <section class="activity-section">
-          <div class="section-title">
-            <h2>状態</h2>
-            <span>稼働中</span>
-          </div>
-          <ul>
-            <li><span></span>会話メモリ</li>
-            <li><span></span>コード補助</li>
-            <li><span></span>日本語最適化</li>
-          </ul>
-        </section>
-      </aside>
+        <fieldset class="persona-group">
+          <legend>性格</legend>
+          <label><input type="radio" name="personality" value="やさしい" checked /><span>やさしい</span></label>
+          <label><input type="radio" name="personality" value="ツンデレ" /><span>ツンデレ</span></label>
+          <label><input type="radio" name="personality" value="クール" /><span>クール</span></label>
+          <label><input type="radio" name="personality" value="元気" /><span>元気</span></label>
+        </fieldset>
+
+        <fieldset class="persona-group">
+          <legend>種族</legend>
+          <label><input type="radio" name="species" value="人" checked /><span>人</span></label>
+          <label><input type="radio" name="species" value="犬" /><span>犬</span></label>
+          <label><input type="radio" name="species" value="猫" /><span>猫</span></label>
+          <label><input type="radio" name="species" value="ロボット" /><span>ロボット</span></label>
+        </fieldset>
+
+        <label class="persona-other">
+          <span>その他</span>
+          <textarea id="personaOther" name="other" rows="3" maxlength="120" placeholder="呼び方、口調、守ってほしい設定など"></textarea>
+        </label>
+
+        <div class="persona-actions">
+          <button class="ghost-button" id="cancelPersona" type="button">キャンセル</button>
+          <button class="button-primary persona-start" type="submit">
+            <i data-lucide="sparkles"></i>
+            <span>開始</span>
+          </button>
+        </div>
+      </form>
     </div>
 
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
